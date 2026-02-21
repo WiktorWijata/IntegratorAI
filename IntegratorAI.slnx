@@ -1,7 +1,13 @@
 <Solution>
-  <Folder Name="/Database/" />
+  <Folder Name="/Database/">
+    <Project Path="Database/IntegratorAI.Database/IntegratorAI.Database.sqlproj" Id="b54ba1df-13ff-4300-ae4b-787ebc889269">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
   <Folder Name="/Deployment/" />
-  <Folder Name="/Source/">
+  <Folder Name="/Source/" />
+  <Folder Name="/Source/Api/">
     <Project Path="Source/IntegratorAI.Api/IntegratorAI.Api.csproj" Id="32e7a007-cab0-4273-b994-f670884b52bb" />
   </Folder>
   <Folder Name="/Tests/" />
