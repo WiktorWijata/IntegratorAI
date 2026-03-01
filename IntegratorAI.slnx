@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/pipieline.yml" />
+  </Folder>
   <Folder Name="/Database/">
     <Project Path="Database/IntegratorAI.Database/IntegratorAI.Database.sqlproj" Id="b54ba1df-13ff-4300-ae4b-787ebc889269">
       <Build />
@@ -7,8 +11,31 @@
   </Folder>
   <Folder Name="/Deployment/" />
   <Folder Name="/Source/" />
-  <Folder Name="/Source/Api/">
-    <Project Path="Source/IntegratorAI.Api/IntegratorAI.Api.csproj" Id="32e7a007-cab0-4273-b994-f670884b52bb" />
+  <Folder Name="/Source/BuildingBlocks/">
+    <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Application/IntegratorAI.BuildingBlocks.Application.csproj" Id="7864d8e3-31b9-461d-8709-e76939849aa1" />
+    <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Infrastructure/IntegratorAI.BuildingBlocks.Infrastructure.csproj" Id="4f1eb331-972b-4102-b623-5640e9785e6e" />
+    <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Persistence/IntegratorAI.BuildingBlocks.Persistence.csproj" Id="561cfc72-edf3-485c-a6c3-ff9337a512da" />
+  </Folder>
+  <Folder Name="/Source/Chat/">
+    <Project Path="Source/Chat/IntegratorAI.Chat.Application/IntegratorAI.Chat.Application.csproj" Id="7784b8c2-5c08-4613-bd4c-315f5a9f1966" />
+    <Project Path="Source/Chat/IntegratorAI.Chat.Contracts/IntegratorAI.Chat.Contracts.csproj" Id="f179d3f7-4a8b-425e-84c6-04bc22c7df3d" />
+    <Project Path="Source/Chat/IntegratorAI.Chat.Domain/IntegratorAI.Chat.Domain.csproj" Id="0e6f5687-3026-4f12-85a2-08e2bc192102" />
+    <Project Path="Source/Chat/IntegratorAI.Chat.Infrastructure/IntegratorAI.Chat.Infrastructure.csproj" Id="36fcad67-51ad-4777-b3b2-21a6f383ee7e" />
+    <Project Path="Source/Chat/IntegratorAI.Chat.Persistance/IntegratorAI.Chat.Persistence.csproj" Id="7a39ed66-16cf-413a-bf87-8b134dbc8f11" />
+  </Folder>
+  <Folder Name="/Source/Context/">
+    <Project Path="Source/Context/IntegratorAI.Context.Application/IntegratorAI.Context.Application.csproj" Id="721f4425-991e-4af9-a5e5-87018516cb99" />
+    <Project Path="Source/Context/IntegratorAI.Context.Infrastructure/IntegratorAI.Context.Infrastructure.csproj" Id="26053511-cfa5-4c9c-9fff-b208e38c8ae4" />
+  </Folder>
+  <Folder Name="/Source/Integrator/">
+    <Project Path="Source/Integrator/IntegratorAI.Api.Contracts/IntegratorAI.Api.Contracts.csproj" Id="31e8acf8-c87e-4056-a02e-44be574a14aa" />
+    <Project Path="Source/Integrator/IntegratorAI.Api/IntegratorAI.Api.csproj" Id="32e7a007-cab0-4273-b994-f670884b52bb" />
+  </Folder>
+  <Folder Name="/Source/Providers/">
+    <Project Path="Source/Providers/IntegratorAI.Providers.Contracts/IntegratorAI.Providers.Contracts.csproj" Id="ea8f21ed-ffa4-409d-8fdc-b851c57a22ad" />
+    <Project Path="Source/Providers/IntegratorAI.Providers.Domain/IntegratorAI.Providers.Domain.csproj" Id="8a7de9ef-fe9e-4ec0-8de2-3f65f00fffc8" />
+    <Project Path="Source/Providers/IntegratorAI.Providers.Infrastructure/IntegratorAI.Providers.Infrastructure.csproj" Id="04fbe009-ac04-4747-a9f7-561eeec2142b" />
+    <Project Path="Source/Providers/IntegratorAI.Providers.Persistance/IntegratorAI.Providers.Persistence.csproj" Id="78d9b996-de96-41f4-9a0a-928cc4583855" />
   </Folder>
   <Folder Name="/Tests/" />
 </Solution>

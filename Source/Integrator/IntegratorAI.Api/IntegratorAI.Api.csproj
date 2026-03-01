@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>integratorai-api</UserSecretsId>
+	<RootNamespace>IntegratorAI.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.12.46" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Chat\IntegratorAI.Chat.Infrastructure\IntegratorAI.Chat.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Providers\IntegratorAI.Providers.Infrastructure\IntegratorAI.Providers.Infrastructure.csproj" />
+    <ProjectReference Include="..\IntegratorAI.Api.Contracts\IntegratorAI.Api.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
