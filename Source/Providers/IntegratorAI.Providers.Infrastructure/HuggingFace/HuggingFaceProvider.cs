@@ -16,10 +16,11 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
         _huggingFaceApi = huggingFaceApi;
     }
 
-    public async Task<CompletionDto> CompletionAsync(CompletionDto completion)
+    public async Task<MessageDto> CompletionAsync(CompletionDto completion)
     {
         var request = completion.ToRequest(Model);
         var response = await _huggingFaceApi.ChatAsync(request);
-        return response.ToDto();
+        var choice = response.Choices?.FirstOrDefault() ?? throw new InvalidOperationException("Provider returned no choices.");
+        return choice.ToMessageDto();
     }
 }

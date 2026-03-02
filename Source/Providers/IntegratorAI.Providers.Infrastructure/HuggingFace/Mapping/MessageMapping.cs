@@ -1,7 +1,6 @@
 ﻿using IntegratorAI.Providers.Contracts.Models;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Api.Models;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Api.Requests;
-using IntegratorAI.Providers.Infrastructure.HuggingFace.Api.Responses;
 
 namespace IntegratorAI.Providers.Infrastructure.HuggingFace.Mapping;
 
@@ -14,21 +13,17 @@ public static class MessageMapping
             Model = model,
             Messages = dto.Messages?.Select(m => new Message
             {
-                Role = m.Role,
+                Role = m.Role?.ToLowerInvariant(),
                 Content = m.Content
             }).ToArray()
         };
     }
 
-    public static CompletionDto ToDto(this MessageResponse response)
+    public static MessageDto ToMessageDto(this Choice choice)
     {
-        return new CompletionDto
-        {
-            Messages = response.Choices?.Select(c => new MessageDto
-            {
-                Role = c.Message?.Role,
-                Content = c.Message?.Content
-            }).ToArray()
+        return new MessageDto {
+            Role = choice.Message?.Role,
+            Content = choice.Message?.Content
         };
     }
 }

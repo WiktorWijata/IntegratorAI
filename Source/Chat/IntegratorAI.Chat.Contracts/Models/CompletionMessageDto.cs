@@ -2,7 +2,7 @@
 {
     public class CompletionMessageDto
     {
-        public RoleDto Role { get; set; }
+        public MessageRoleDto Role { get; set; }
         public string Content { get; set; }
     }
 }

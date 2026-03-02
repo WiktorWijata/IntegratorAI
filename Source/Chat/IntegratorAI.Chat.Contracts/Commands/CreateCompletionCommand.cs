@@ -1,11 +1,11 @@
-﻿using IntegratorAI.Chat.Contracts.Models;
+using IntegratorAI.Chat.Contracts.Models;
 using MediatR;
 
 namespace IntegratorAI.Chat.Contracts.Commands
 {
-    public class CreateCompletion : IRequest<CompletionResponseDto>
+    public class CreateCompletionCommand : IRequest<CompletionResponseDto>
     {
-        public CreateCompletion(string prompt)
+        public CreateCompletionCommand(string prompt)
         {
             Prompt = prompt;
         }

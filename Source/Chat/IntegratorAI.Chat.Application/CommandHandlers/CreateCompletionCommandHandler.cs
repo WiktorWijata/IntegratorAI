@@ -1,47 +1,59 @@
 ﻿using IntegratorAI.Chat.Contracts.Commands;
 using IntegratorAI.Chat.Contracts.Models;
+using IntegratorAI.Chat.Domain;
+using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using MediatR;
 
 namespace IntegratorAI.Chat.Application.CommandHandlers;
 
-public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletion, CompletionResponseDto>
+public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCommand, CompletionResponseDto>
 {
     private readonly IProviderModule _providerModule;
+    private readonly ICompletionRepository _completionRepository;
 
-    public CreateCompletionCommandHandler(IProviderModule providerModule)
+    public CreateCompletionCommandHandler(IProviderModule providerModule, ICompletionRepository completionRepository)
     {
         _providerModule = providerModule;
+        _completionRepository = completionRepository;
     }
 
-    public async Task<CompletionResponseDto> Handle(CreateCompletion request, CancellationToken cancellationToken)
+    public async Task<CompletionResponseDto> Handle(CreateCompletionCommand request, CancellationToken cancellationToken)
     {
         var provider = await _providerModule.GetActiveProviderAsync(cancellationToken);
 
-        var completionDto = await provider.CompletionAsync(new CompletionDto
+        var completion = new Completion(
+            message: new Message(MessageRole.User, request.Prompt)
+        );
+
+        await _completionRepository.AddAsync(completion, cancellationToken);
+        
+        var messageDto = await provider.CompletionAsync(new CompletionDto
         {
-            Messages =
-            [
-                new MessageDto
-                {
-                    Role = RoleDto.User.ToString().ToLowerInvariant(),
-                    Content = request.Prompt
-                }
-            ]
+            Messages = completion.Messages.Select(m => new MessageDto
+            {
+                Role = m.Role.ToString(),
+                Content = m.Content
+            }).ToArray()
         });
+
+        completion.AddMessage(
+            message: new Message(
+                role: Enum.Parse<MessageRole>(messageDto.Role, true),
+                content: messageDto.Content
+            )
+        );
 
         var response = new CompletionResponseDto
         {
-            CompletionId = Guid.NewGuid().ToString(),
-            Messages = completionDto.Messages.Select(m => new CompletionMessageDto
+            CompletionId = completion.Id.ToString(),
+            Messages = completion.Messages.Select(m => new CompletionMessageDto
             {
-                Role = Enum.Parse<RoleDto>(m.Role, true),
+                Role = Enum.Parse<MessageRoleDto>(m.Role.ToString(), true),
                 Content = m.Content
             }).ToArray()
         };
-
-
 
         return response;
     }

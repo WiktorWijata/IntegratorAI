@@ -24,9 +24,4 @@ public class CompletionRepository : ICompletionRepository
     {
         await _context.Completions.AddAsync(completion, cancellationToken);
     }
-
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        await _context.SaveChangesAsync(cancellationToken);
-    }
 }

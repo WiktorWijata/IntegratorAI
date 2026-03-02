@@ -1,6 +1,6 @@
 ﻿namespace IntegratorAI.Chat.Contracts.Models
 {
-    public enum RoleDto
+    public enum MessageRoleDto
     {
         User = 1,
         Assistant,

@@ -1,6 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using IntegratorAI.BuildingBlocks.Application;
 using IntegratorAI.BuildingBlocks.Persistence.Conventions;
-using Microsoft.EntityFrameworkCore;
 
 namespace IntegratorAI.BuildingBlocks.Persistence;
 

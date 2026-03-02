@@ -20,7 +20,7 @@ public class ChatController : ControllerBase
     [ProducesResponseType(typeof(CompletionResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CompletionRequest completion, [FromQuery] bool useContext = false, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(new CreateCompletion(completion.Prompt), cancellationToken);
+        var result = await _mediator.Send(new CreateCompletionCommand(completion.Prompt), cancellationToken);
         return Ok(result.ToResponse());
     }
 

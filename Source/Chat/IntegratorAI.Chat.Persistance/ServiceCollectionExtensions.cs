@@ -1,7 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
+using IntegratorAI.BuildingBlocks.Persistence;
 using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Chat.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace IntegratorAI.Chat.Persistence;
 
@@ -9,11 +9,9 @@ public static class ServiceCollectionExtensions
 {
     public static void AddEntityFramework(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<ChatDbContext>(options =>
+        services.AddEntityFramework<ChatDbContext>(connectionString, repos =>
         {
-            options.UseSqlServer(connectionString);
+            repos.AddScoped<ICompletionRepository, CompletionRepository>();
         });
-
-        services.AddScoped<ICompletionRepository, CompletionRepository>();
     }
 }

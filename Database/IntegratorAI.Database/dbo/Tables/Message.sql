@@ -5,6 +5,5 @@ CREATE TABLE [dbo].[Message]
     [Role]          NVARCHAR(50)        NOT NULL,
     [Content]       NVARCHAR(MAX)       NOT NULL,
     [CreatedAt]     DATETIME2           NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT [FK_Message_Completion] FOREIGN KEY ([CompletionId])
-        REFERENCES [dbo].[Completion]([Id])
+    CONSTRAINT [FK_Message_Completion] FOREIGN KEY ([CompletionId]) REFERENCES [dbo].[Completion]([Id])
 )

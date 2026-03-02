@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using IntegratorAI.BuildingBlocks.Application;
 using IntegratorAI.Chat.Application.CommandHandlers;
 using IntegratorAI.Chat.Persistence;
 
@@ -8,7 +9,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddChat(this IServiceCollection services, string connectionString)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCompletionCommandHandler).Assembly));
+        services.AddMediatR(typeof(CreateCompletionCommandHandler).Assembly);
         services.AddEntityFramework(connectionString);
         return services;
     }
