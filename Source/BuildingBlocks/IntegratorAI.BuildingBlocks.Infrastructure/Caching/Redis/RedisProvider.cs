@@ -26,10 +26,10 @@ public class RedisCacheProvider : ICacheProvider
         return JsonSerializer.Deserialize<T>(((byte[])value)!);
     }
 
-    public async Task SetAsync<T>(string key, T value, TimeSpan ttl)
+    public async Task SetAsync<T>(string key, T value, TimeSpan? ttl = null)
     {
         var serialized = JsonSerializer.SerializeToUtf8Bytes(value);
-        await _database.StringSetAsync(key, serialized, ttl);
+        await _database.StringSetAsync(key, serialized, ttl ?? _settings.DefaultExpiration);
     }
 
     public async Task RemoveAsync(string key)

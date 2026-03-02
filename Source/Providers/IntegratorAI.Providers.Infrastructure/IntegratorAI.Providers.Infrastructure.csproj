@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\IntegratorAI.BuildingBlocks.Application\IntegratorAI.BuildingBlocks.Application.csproj" />
     <ProjectReference Include="..\IntegratorAI.Providers.Contracts\IntegratorAI.Providers.Contracts.csproj" />
     <ProjectReference Include="..\IntegratorAI.Providers.Persistance\IntegratorAI.Providers.Persistence.csproj" />
   </ItemGroup>

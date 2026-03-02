@@ -7,10 +7,16 @@ namespace IntegratorAI.BuildingBlocks.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddRedis(this IServiceCollection services, RedisCacheSettings settings)
+    public static IServiceCollection UseRedisAsDefaultCacheProvider(this IServiceCollection services, RedisCacheSettings settings)
     {
-        ConfigurationOptions configurationOptions = ConfigurationOptions.Parse(settings.ConnectionString);
-        services.AddSingleton(ConnectionMultiplexer.Connect(settings.ConnectionString));
+        var configurationOptions = ConfigurationOptions.Parse(settings.ConnectionString);
+
+        if (!string.IsNullOrEmpty(settings.Password))
+        {
+            configurationOptions.Password = settings.Password;
+        }
+
+        services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(configurationOptions));
         services.AddSingleton(settings);
         services.AddSingleton<ICacheProvider, RedisCacheProvider>();
         return services;
