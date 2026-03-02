@@ -28,8 +28,7 @@ public class ChatController : ControllerBase
     [ProducesResponseType(typeof(CompletionResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Continue(Guid id, [FromBody] CompletionRequest completion, CancellationToken cancellationToken)
     {
-        //var result = await _mediator.Send(new SendMessage(completion.Prompt, completion.UseContext));
-        //return Ok(result);
-        return null;
+        var result = await _mediator.Send(new ContinueCompletionCommand(id, completion.Prompt), cancellationToken);
+        return Ok(result.ToResponse());
     }
 }

@@ -13,6 +13,7 @@
   <Folder Name="/Source/" />
   <Folder Name="/Source/BuildingBlocks/">
     <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Application/IntegratorAI.BuildingBlocks.Application.csproj" Id="7864d8e3-31b9-461d-8709-e76939849aa1" />
+    <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Domain/IntegratorAI.BuildingBlocks.Domain.csproj" />
     <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Infrastructure/IntegratorAI.BuildingBlocks.Infrastructure.csproj" Id="4f1eb331-972b-4102-b623-5640e9785e6e" />
     <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Persistence/IntegratorAI.BuildingBlocks.Persistence.csproj" Id="561cfc72-edf3-485c-a6c3-ff9337a512da" />
   </Folder>

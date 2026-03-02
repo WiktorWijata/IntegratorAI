@@ -6,6 +6,9 @@ namespace IntegratorAI.Providers.Infrastructure.HuggingFace.Api;
 
 public interface IHuggingFaceApi
 {
-    [Post("/chat/completions")]
-    public Task<MessageResponse> ChatAsync([Body] MessageRequest request);
+    [Post("/v1/chat/completions")]
+    Task<MessageResponse> ChatAsync([Body] MessageRequest request);
+
+    [Post("/{modelId}")]
+    Task<T> PipelineAsync<T>([AliasAs("modelId")] string modelId, [Body] PipelineRequest request);
 }

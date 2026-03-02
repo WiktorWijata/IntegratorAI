@@ -2,7 +2,9 @@
 
 internal interface IProviderInitalizable
 {
-    string Model { get; set; }
+    string PrimaryModel { get; set; }
+    string SummarizationModel { get; set; }
 
-    void SetModel(string model) => Model = model;
+    void SetPrimaryModel(string model) => PrimaryModel = model;
+    void SetSummarizationModel(string model) => SummarizationModel = model;
 }

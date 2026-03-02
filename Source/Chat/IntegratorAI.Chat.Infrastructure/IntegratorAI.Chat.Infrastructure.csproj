@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\IntegratorAI.BuildingBlocks.Infrastructure\IntegratorAI.BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\IntegratorAI.Chat.Application\IntegratorAI.Chat.Application.csproj" />
     <ProjectReference Include="..\IntegratorAI.Chat.Contracts\IntegratorAI.Chat.Contracts.csproj" />
     <ProjectReference Include="..\IntegratorAI.Chat.Persistance\IntegratorAI.Chat.Persistence.csproj" />

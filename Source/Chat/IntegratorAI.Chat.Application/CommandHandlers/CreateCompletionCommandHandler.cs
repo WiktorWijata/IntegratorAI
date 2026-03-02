@@ -21,15 +21,13 @@ public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCo
 
     public async Task<CompletionResponseDto> Handle(CreateCompletionCommand request, CancellationToken cancellationToken)
     {
-        var provider = await _providerModule.GetActiveProviderAsync(cancellationToken);
-
         var completion = new Completion(
             message: new Message(MessageRole.User, request.Prompt)
         );
 
         await _completionRepository.AddAsync(completion, cancellationToken);
         
-        var messageDto = await provider.CompletionAsync(new CompletionDto
+        var messageDto = await _providerModule.CompletionAsync(new CompletionDto
         {
             Messages = completion.Messages.Select(m => new MessageDto
             {

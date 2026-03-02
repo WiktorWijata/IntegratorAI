@@ -17,6 +17,7 @@ public class CompletionRepository : ICompletionRepository
     {
         return await _context.Completions
             .Include(c => c.Messages)
+            .Include(c => c.Summary)
             .SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 

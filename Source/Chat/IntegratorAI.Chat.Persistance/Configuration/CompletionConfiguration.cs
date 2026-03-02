@@ -12,5 +12,10 @@ public class CompletionConfiguration : IEntityTypeConfiguration<Completion>
                .WithOne()
                .HasForeignKey(m => m.CompletionId)
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(c => c.Summary)
+               .WithOne()
+               .HasForeignKey<CompletionSummary>(s => s.CompletionId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -5,6 +5,7 @@ namespace IntegratorAI.Providers.Contracts
 {
     public interface IProvider
     {
-        Task<MessageDto> CompletionAsync(CompletionDto completion);        
+        Task<MessageDto> CompletionAsync(CompletionDto completion);
+        Task<MessageDto> SummaryCompletionAsync(CompletionDto completion);
     }
 }

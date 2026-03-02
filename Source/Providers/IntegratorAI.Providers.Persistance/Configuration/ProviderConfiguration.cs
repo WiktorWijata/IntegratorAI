@@ -8,6 +8,6 @@ public class ProviderConfiguration : IEntityTypeConfiguration<Provider>
 {
     public void Configure(EntityTypeBuilder<Provider> builder)
     {
-        builder.Property(p => p.Model).IsRequired();
+        builder.Property(p => p.PrimaryModel).IsRequired();
     }
 }

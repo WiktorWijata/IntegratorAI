@@ -1,5 +1,6 @@
 using IntegratorAI.BuildingBlocks.Infrastructure;
 using IntegratorAI.BuildingBlocks.Infrastructure.Caching.Redis;
+using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Infrastructure;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Infrastructure;
@@ -11,10 +12,12 @@ var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisCacheSett
     ?? throw new InvalidOperationException("Redis configuration is missing.");
 builder.Services.UseRedisAsDefaultCacheProvider(redisSettings);
 
-var providersConfiguration = builder.Configuration.GetSection("Providers").Get<List<ProviderConfiguration>>() ?? [];
 var connectionString = builder.Configuration.GetConnectionString("IntegratorAI");
+var providersConfiguration = builder.Configuration.GetSection("Providers").Get<List<ProviderConfiguration>>() ?? [];
 builder.Services.AddProviders(connectionString!, providersConfiguration);
-builder.Services.AddChat(connectionString!);
+
+var chatSettings = builder.Configuration.GetSection("Chat").Get<ChatSettings>() ?? new ChatSettings();
+builder.Services.AddChat(connectionString!, chatSettings);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

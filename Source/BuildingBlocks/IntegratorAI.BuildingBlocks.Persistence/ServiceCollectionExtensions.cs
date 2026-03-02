@@ -12,9 +12,12 @@ public static class ServiceCollectionExtensions
         Action<IServiceCollection>? repositories = null)
         where TContext : EfContext
     {
-        services.AddDbContext<TContext>(options =>
+        services.AddScoped<PublishEventsInterceptor>();
+
+        services.AddDbContext<TContext>((sp, options) =>
         {
             options.UseSqlServer(connectionString);
+            options.AddInterceptors(sp.GetRequiredService<PublishEventsInterceptor>());
         });
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TContext>());

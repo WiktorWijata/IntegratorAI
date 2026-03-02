@@ -4,6 +4,7 @@ public class Message
 {
     public int Id { get; set; }
     public Guid CompletionId { get; set; }
+    public int Index { get; set; }
     public MessageRole Role { get; set; }
     public string Content { get; set; }
     public DateTime CreatedAt { get; set; }
