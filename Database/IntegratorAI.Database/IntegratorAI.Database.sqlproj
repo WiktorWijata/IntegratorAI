@@ -64,5 +64,6 @@
     <Build Include="dbo\Tables\Completion.sql" />
     <Build Include="dbo\Tables\Message.sql" />
     <Build Include="dbo\Tables\Provider.sql" />
+    <Build Include="dbo\Tables\CompletionSummary.sql" />
   </ItemGroup>
 </Project>

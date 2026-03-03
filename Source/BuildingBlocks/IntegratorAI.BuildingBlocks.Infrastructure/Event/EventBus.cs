@@ -15,6 +15,12 @@ public class EventBus : IEventBus
     public async Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : IEvent
     {
+        await DispatchAsync((dynamic)@event!, cancellationToken);
+    }
+
+    private async Task DispatchAsync<TEvent>(TEvent @event, CancellationToken cancellationToken)
+        where TEvent : IEvent
+    {
         var handlers = _serviceProvider.GetServices<IHandleEvent<TEvent>>();
 
         foreach (var handler in handlers)

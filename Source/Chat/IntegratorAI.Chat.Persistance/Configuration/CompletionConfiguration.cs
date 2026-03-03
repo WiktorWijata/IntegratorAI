@@ -8,6 +8,8 @@ public class CompletionConfiguration : IEntityTypeConfiguration<Completion>
 {
     public void Configure(EntityTypeBuilder<Completion> builder)
     {
+        builder.Ignore(c => c.UnsummarizedMessages);
+
         builder.HasMany(c => c.Messages)
                .WithOne()
                .HasForeignKey(m => m.CompletionId)
