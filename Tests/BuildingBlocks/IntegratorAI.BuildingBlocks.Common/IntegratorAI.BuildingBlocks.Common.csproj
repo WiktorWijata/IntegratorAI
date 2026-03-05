@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\BuildingBlocks\IntegratorAI.BuildingBlocks.Domain\IntegratorAI.BuildingBlocks.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Source\BuildingBlocks\IntegratorAI.BuildingBlocks.Infrastructure\IntegratorAI.BuildingBlocks.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
