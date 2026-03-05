@@ -33,7 +33,9 @@ public class PublishEventsInterceptor : SaveChangesInterceptor
             aggregateRoots.ForEach(e => e.ClearDomainEvents());
 
             foreach (var @event in events)
+            {
                 await _eventBus.PublishAsync(@event, cancellationToken);
+            }
         }
 
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
