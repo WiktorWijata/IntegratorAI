@@ -44,4 +44,7 @@
     <Project Path="Tests/BuildingBlocks/IntegratorAI.BuildingBlocks.IntegrationTests/IntegratorAI.BuildingBlocks.IntegrationTests.csproj" Id="b8d719d5-0630-4103-88be-94b827dd8b96" />
     <Project Path="Tests/BuildingBlocks/IntegratorAI.BuildingBlocks.UnitTests/IntegratorAI.BuildingBlocks.UnitTests.csproj" Id="900b9d71-c8a6-40eb-9468-4c7ca1702eef" />
   </Folder>
+  <Folder Name="/Tests/Providers/">
+    <Project Path="Tests/Providers/IntegratorAI.Providers.UnitTests/IntegratorAI.Providers.UnitTests.csproj" Id="4d3db3bb-8b44-4e10-be5f-56445a54a07c" />
+  </Folder>
 </Solution>
