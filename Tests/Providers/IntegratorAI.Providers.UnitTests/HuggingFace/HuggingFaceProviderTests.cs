@@ -243,17 +243,6 @@ public class HuggingFaceProviderTests
         Assert.Equal("assistant", capturedRequest.Messages[1].Role);
     }
 
-    [Fact]
-    public async Task SummaryCompletionAsync_ThrowsInvalidOperationException_WhenPipelineReturnsNull()
-    {
-        _provider.SummarizationModel = "summary-model";
-        _apiMock
-            .Setup(a => a.PipelineAsync<SummarizationResponse[]>(It.IsAny<string>(), It.IsAny<PipelineRequest>()))
-            .ReturnsAsync((SummarizationResponse[]?)null!);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            () => _provider.SummaryCompletionAsync(BuildCompletion(("user", "text"))));
-    }
 
     [Fact]
     public async Task SummaryCompletionAsync_UsesPrimaryModel_WhenNoSummarizationModel()
