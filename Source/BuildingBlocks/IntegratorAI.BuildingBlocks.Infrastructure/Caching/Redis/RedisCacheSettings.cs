@@ -2,7 +2,7 @@
 
 public class RedisCacheSettings
 {
-    public required string ConnectionString { get; set; }
-    public string? Password { get; set; }
-    public TimeSpan DefaultExpiration { get; set; }
+    public required string ConnectionString { get; init; }
+    public string? Password { get; init; }
+    public TimeSpan DefaultExpiration { get; init; }
 }

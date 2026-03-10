@@ -34,7 +34,7 @@ public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCo
                 Role = m.Role.ToString(),
                 Content = m.Content
             }).ToArray()
-        });
+        }, cancellationToken);
 
         completion.AddMessage(
             message: new Message(

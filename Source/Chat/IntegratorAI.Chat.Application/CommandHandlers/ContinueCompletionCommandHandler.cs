@@ -37,7 +37,7 @@ public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompleti
         {
             messages.Add(new MessageDto
             {
-                Role = MessageRole.System.ToString(),
+                Role = nameof(MessageRole.System),
                 Content = $"Summary of the conversation so far: {completion.Summary.Content}"
             });
         }
@@ -50,7 +50,7 @@ public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompleti
 
         var completionDto = new CompletionDto { Messages = [.. messages] };
 
-        var messageDto = await _providerModule.CompletionAsync(completionDto);
+        var messageDto = await _providerModule.CompletionAsync(completionDto, cancellationToken);
 
         completion.AddMessage(new Message(
             role: Enum.Parse<MessageRole>(messageDto.Role, true),

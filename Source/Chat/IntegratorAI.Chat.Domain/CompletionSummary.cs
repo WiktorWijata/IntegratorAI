@@ -3,7 +3,7 @@ namespace IntegratorAI.Chat.Domain;
 public class CompletionSummary
 {
     public Guid CompletionId { get; set; }
-    public string Content { get; protected set; }
+    public string Content { get; protected set; } = null!;
     public int SummarizedUpToIndex { get; protected set; }
     public DateTime CreatedAt { get; protected set; }
     public DateTime? ModifiedAt { get; protected set; }
