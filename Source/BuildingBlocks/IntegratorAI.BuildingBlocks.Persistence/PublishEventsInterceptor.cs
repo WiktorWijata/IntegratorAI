@@ -18,22 +18,22 @@ public class PublishEventsInterceptor : SaveChangesInterceptor
         int result,
         CancellationToken cancellationToken = default)
     {
-        if (eventData.Context is not null)
+        if (eventData.Context is null) return await base.SavedChangesAsync(eventData, result, cancellationToken);
+        var aggregateRoots = eventData.Context.ChangeTracker
+            .Entries<IAggregateRoot>()
+            .Select(e => e.Entity)
+            .Where(e => e.GetDomainEvents().Count > 0)
+            .ToList();
+
+        var events = aggregateRoots
+            .SelectMany(e => e.GetDomainEvents())
+            .ToList();
+
+        aggregateRoots.ForEach(e => e.ClearDomainEvents());
+
+        foreach (var @event in events)
         {
-            var aggregateRoots = eventData.Context.ChangeTracker
-                .Entries<IAggregateRoot>()
-                .Select(e => e.Entity)
-                .Where(e => e.GetDomainEvents().Count > 0)
-                .ToList();
-
-            var events = aggregateRoots
-                .SelectMany(e => e.GetDomainEvents())
-                .ToList();
-
-            aggregateRoots.ForEach(e => e.ClearDomainEvents());
-
-            foreach (var @event in events)
-                await _eventBus.PublishAsync(@event, cancellationToken);
+            await _eventBus.PublishAsync(@event, cancellationToken);
         }
 
         return await base.SavedChangesAsync(eventData, result, cancellationToken);

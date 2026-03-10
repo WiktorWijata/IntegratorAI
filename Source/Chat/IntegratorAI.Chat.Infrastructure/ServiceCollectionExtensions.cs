@@ -10,12 +10,11 @@ namespace IntegratorAI.Chat.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddChat(this IServiceCollection services, string connectionString, ChatSettings chatSettings)
+    public static void AddChat(this IServiceCollection services, string connectionString, ChatSettings chatSettings)
     {
         services.AddSingleton(chatSettings);
         services.AddMediatR(typeof(CreateCompletionCommandHandler).Assembly);
         services.AddEntityFramework(connectionString);
         services.AddEventBus(typeof(CompletionSummaryRequiredEventHandler).Assembly);
-        return services;
     }
 }

@@ -31,26 +31,16 @@ public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompleti
 
         completion.AddMessage(new Message(MessageRole.User, request.Prompt));
 
-        var messages = new List<MessageDto>();
-
-        if (completion.Summary is not null)
+        var completionDto = new CompletionDto
         {
-            messages.Add(new MessageDto
+            Messages = completion.ContextMessages.Select(m => new MessageDto
             {
-                Role = MessageRole.System.ToString(),
-                Content = $"Summary of the conversation so far: {completion.Summary.Content}"
-            });
-        }
+                Role = m.Role.ToString(),
+                Content = m.Content
+            }).ToArray()
+        };
 
-        messages.AddRange(completion.UnsummarizedMessages.Select(m => new MessageDto
-        {
-            Role = m.Role.ToString(),
-            Content = m.Content
-        }));
-
-        var completionDto = new CompletionDto { Messages = [.. messages] };
-
-        var messageDto = await _providerModule.CompletionAsync(completionDto);
+        var messageDto = await _providerModule.CompletionAsync(completionDto, cancellationToken);
 
         completion.AddMessage(new Message(
             role: Enum.Parse<MessageRole>(messageDto.Role, true),

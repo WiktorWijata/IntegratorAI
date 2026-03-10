@@ -2,5 +2,5 @@
 
 public class ChatSettings
 {
-    public int SummarizationThreshold { get; set; } = 10;
+    public int SummarizationThreshold { get; init; } = 10;
 }

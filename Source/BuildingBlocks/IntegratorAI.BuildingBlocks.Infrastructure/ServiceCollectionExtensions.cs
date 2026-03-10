@@ -11,7 +11,7 @@ namespace IntegratorAI.BuildingBlocks.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddEventBus(this IServiceCollection services, params Assembly[] assemblies)
+    public static void AddEventBus(this IServiceCollection services, params Assembly[] assemblies)
     {
         services.TryAddScoped<IEventBus, EventBus>();
 
@@ -28,11 +28,9 @@ public static class ServiceCollectionExtensions
                 services.AddScoped(handler.ServiceType, handler.Implementation);
             }
         }
-
-        return services;
     }
 
-    public static IServiceCollection UseRedisAsDefaultCacheProvider(this IServiceCollection services, RedisCacheSettings settings)
+    public static void UseRedisAsDefaultCacheProvider(this IServiceCollection services, RedisCacheSettings settings)
     {
         var configurationOptions = ConfigurationOptions.Parse(settings.ConnectionString);
 
@@ -44,6 +42,5 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(configurationOptions));
         services.AddSingleton(settings);
         services.AddSingleton<ICacheProvider, RedisCacheProvider>();
-        return services;
     }
 }

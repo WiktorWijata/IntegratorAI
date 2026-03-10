@@ -7,7 +7,7 @@ namespace IntegratorAI.BuildingBlocks.Application;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMediatR(this IServiceCollection services, params Assembly[] assemblies)
+    public static void AddMediatR(this IServiceCollection services, params Assembly[] assemblies)
     {
         services.AddMediatR(cfg =>
         {
@@ -39,7 +39,5 @@ public static class ServiceCollectionExtensions
                 );
             }
         }
-
-        return services;
     }
 }

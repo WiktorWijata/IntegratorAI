@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
 {
     public static void AddEntityFramework(this IServiceCollection services, string connectionString)
     {
-        services.AddEntityFramework<ChatDbContext>(connectionString, repos =>
+        services.AddEntityFramework<ChatDbContext>(connectionString, repositories: repos =>
         {
             repos.AddScoped<ICompletionRepository, CompletionRepository>();
         });

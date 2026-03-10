@@ -6,7 +6,7 @@ public class Message
     public Guid CompletionId { get; set; }
     public int Index { get; set; }
     public MessageRole Role { get; set; }
-    public string Content { get; set; }
+    public string Content { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
 
     public Message(MessageRole role, string content)

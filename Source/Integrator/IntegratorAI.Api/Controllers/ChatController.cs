@@ -24,7 +24,7 @@ public class ChatController : ControllerBase
         return Ok(result.ToResponse());
     }
 
-    [HttpPost("completions/{id}")]
+    [HttpPost("completions/{id:guid}")]
     [ProducesResponseType(typeof(CompletionResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Continue(Guid id, [FromBody] CompletionRequest completion, CancellationToken cancellationToken)
     {

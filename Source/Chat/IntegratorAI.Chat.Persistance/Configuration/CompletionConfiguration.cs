@@ -9,6 +9,7 @@ public class CompletionConfiguration : IEntityTypeConfiguration<Completion>
     public void Configure(EntityTypeBuilder<Completion> builder)
     {
         builder.Ignore(c => c.UnsummarizedMessages);
+        builder.Ignore(c => c.ContextMessages);
 
         builder.HasMany(c => c.Messages)
                .WithOne()

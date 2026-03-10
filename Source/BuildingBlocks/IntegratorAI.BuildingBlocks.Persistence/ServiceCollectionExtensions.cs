@@ -6,8 +6,7 @@ namespace IntegratorAI.BuildingBlocks.Persistence;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddEntityFramework<TContext>(
-        this IServiceCollection services,
+    public static void AddEntityFramework<TContext>(this IServiceCollection services,
         string connectionString,
         Action<IServiceCollection>? repositories = null)
         where TContext : EfContext
@@ -23,7 +22,5 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TContext>());
 
         repositories?.Invoke(services);
-
-        return services;
     }
 }
