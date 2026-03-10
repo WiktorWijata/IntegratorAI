@@ -4,7 +4,7 @@ using IntegratorAI.BuildingBlocks.Common.Models.Domain;
 using IntegratorAI.BuildingBlocks.Common.Models.Events;
 using IntegratorAI.BuildingBlocks.Domain.Event;
 using IntegratorAI.BuildingBlocks.Persistence;
-using Moq;
+using NSubstitute;
 
 namespace IntegratorAI.BuildingBlocks.UnitTests.Persistence;
 
@@ -25,10 +25,10 @@ public class PublishEventsInterceptorTests
     private static SaveChangesCompletedEventData CreateEventData(DbContext? context) =>
         new(null!, (_, _) => string.Empty, context!, 1);
 
-    private static Mock<IEventBus> CreateEventBusMock()
+    private static IEventBus CreateEventBusMock()
     {
-        var mock = new Mock<IEventBus>();
-        mock.Setup(e => e.PublishAsync(It.IsAny<IEvent>(), It.IsAny<CancellationToken>()))
+        var mock = Substitute.For<IEventBus>();
+        mock.PublishAsync(Arg.Any<IEvent>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         return mock;
     }
@@ -43,11 +43,11 @@ public class PublishEventsInterceptorTests
         context.Add(aggregate);
 
         var eventBusMock = CreateEventBusMock();
-        var interceptor = new PublishEventsInterceptor(eventBusMock.Object);
+        var interceptor = new PublishEventsInterceptor(eventBusMock);
 
         await interceptor.SavedChangesAsync(CreateEventData(context), 1);
 
-        eventBusMock.Verify(e => e.PublishAsync(It.IsAny<IEvent>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+        await eventBusMock.Received(2).PublishAsync(Arg.Any<IEvent>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class PublishEventsInterceptorTests
         aggregate.AddEvent(new TestEvent());
         context.Add(aggregate);
 
-        var interceptor = new PublishEventsInterceptor(CreateEventBusMock().Object);
+        var interceptor = new PublishEventsInterceptor(CreateEventBusMock());
 
         await interceptor.SavedChangesAsync(CreateEventData(context), 1);
 
@@ -70,11 +70,11 @@ public class PublishEventsInterceptorTests
     {
         using var context = new InterceptorTestDbContext(CreateOptions());
         var eventBusMock = CreateEventBusMock();
-        var interceptor = new PublishEventsInterceptor(eventBusMock.Object);
+        var interceptor = new PublishEventsInterceptor(eventBusMock);
 
         await interceptor.SavedChangesAsync(CreateEventData(context), 0);
 
-        eventBusMock.Verify(e => e.PublishAsync(It.IsAny<IEvent>(), It.IsAny<CancellationToken>()), Times.Never());
+        await eventBusMock.DidNotReceive().PublishAsync(Arg.Any<IEvent>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -85,24 +85,24 @@ public class PublishEventsInterceptorTests
         context.Add(aggregate);
 
         var eventBusMock = CreateEventBusMock();
-        var interceptor = new PublishEventsInterceptor(eventBusMock.Object);
+        var interceptor = new PublishEventsInterceptor(eventBusMock);
 
         await interceptor.SavedChangesAsync(CreateEventData(context), 1);
 
-        eventBusMock.Verify(e => e.PublishAsync(It.IsAny<IEvent>(), It.IsAny<CancellationToken>()), Times.Never());
+        await eventBusMock.DidNotReceive().PublishAsync(Arg.Any<IEvent>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task SavedChangesAsync_DoesNotThrow_WhenContextIsNull()
     {
         var eventBusMock = CreateEventBusMock();
-        var interceptor = new PublishEventsInterceptor(eventBusMock.Object);
+        var interceptor = new PublishEventsInterceptor(eventBusMock);
 
         var exception = await Record.ExceptionAsync(() =>
             interceptor.SavedChangesAsync(CreateEventData(null), 0).AsTask());
 
         Assert.Null(exception);
-        eventBusMock.Verify(e => e.PublishAsync(It.IsAny<IEvent>(), It.IsAny<CancellationToken>()), Times.Never());
+        await eventBusMock.DidNotReceive().PublishAsync(Arg.Any<IEvent>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -114,11 +114,11 @@ public class PublishEventsInterceptorTests
         context.Add(aggregate);
 
         var eventBusMock = CreateEventBusMock();
-        var interceptor = new PublishEventsInterceptor(eventBusMock.Object);
+        var interceptor = new PublishEventsInterceptor(eventBusMock);
         using var cts = new CancellationTokenSource();
 
         await interceptor.SavedChangesAsync(CreateEventData(context), 1, cts.Token);
 
-        eventBusMock.Verify(e => e.PublishAsync(It.IsAny<IEvent>(), cts.Token), Times.Once());
+        await eventBusMock.Received(1).PublishAsync(Arg.Any<IEvent>(), cts.Token);
     }
 }

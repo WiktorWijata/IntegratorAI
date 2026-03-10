@@ -1,6 +1,6 @@
 using System.Text.Json;
 using IntegratorAI.BuildingBlocks.Infrastructure.Caching.Redis;
-using Moq;
+using NSubstitute;
 using StackExchange.Redis;
 
 namespace IntegratorAI.BuildingBlocks.UnitTests.Infrastructure;
@@ -9,7 +9,7 @@ public class RedisCacheProviderTests
 {
     private record TestPayload(string Name, int Value);
 
-    private readonly Mock<IDatabase> _databaseMock = new();
+    private readonly IDatabase _database = Substitute.For<IDatabase>();
     private readonly RedisCacheSettings _settings = new()
     {
         ConnectionString = "localhost",
@@ -19,12 +19,12 @@ public class RedisCacheProviderTests
 
     public RedisCacheProviderTests()
     {
-        var multiplexerMock = new Mock<IConnectionMultiplexer>();
-        multiplexerMock
-            .Setup(m => m.GetDatabase(It.IsAny<int>(), It.IsAny<object?>()))
-            .Returns(_databaseMock.Object);
+        var multiplexer = Substitute.For<IConnectionMultiplexer>();
+        multiplexer
+            .GetDatabase(Arg.Any<int>(), Arg.Any<object?>())
+            .Returns(_database);
 
-        _provider = new RedisCacheProvider(multiplexerMock.Object, _settings);
+        _provider = new RedisCacheProvider(multiplexer, _settings);
     }
 
     [Fact]
@@ -32,9 +32,9 @@ public class RedisCacheProviderTests
     {
         var payload = new TestPayload("test", 42);
         var bytes = JsonSerializer.SerializeToUtf8Bytes(payload);
-        _databaseMock
-            .Setup(d => d.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
-            .ReturnsAsync((RedisValue)bytes);
+        _database
+            .StringGetAsync(Arg.Any<RedisKey>(), Arg.Any<CommandFlags>())
+            .Returns((RedisValue)bytes);
 
         var result = await _provider.GetAsync<TestPayload>("key");
 
@@ -45,9 +45,9 @@ public class RedisCacheProviderTests
     [Fact]
     public async Task GetAsync_ReturnsDefault_WhenKeyNotFound()
     {
-        _databaseMock
-            .Setup(d => d.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
-            .ReturnsAsync(RedisValue.Null);
+        _database
+            .StringGetAsync(Arg.Any<RedisKey>(), Arg.Any<CommandFlags>())
+            .Returns(RedisValue.Null);
 
         var result = await _provider.GetAsync<TestPayload>("missing-key");
 
@@ -58,13 +58,13 @@ public class RedisCacheProviderTests
     public async Task GetAsync_PassesCorrectKey_ToDatabase()
     {
         const string key = "my-cache-key";
-        _databaseMock
-            .Setup(d => d.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
-            .ReturnsAsync(RedisValue.Null);
+        _database
+            .StringGetAsync(Arg.Any<RedisKey>(), Arg.Any<CommandFlags>())
+            .Returns(RedisValue.Null);
 
         await _provider.GetAsync<TestPayload>(key);
 
-        _databaseMock.Verify(d => d.StringGetAsync(key, It.IsAny<CommandFlags>()), Times.Once());
+        await _database.Received(1).StringGetAsync(key, Arg.Any<CommandFlags>());
     }
 
     [Fact]
@@ -75,8 +75,8 @@ public class RedisCacheProviderTests
 
         await _provider.SetAsync("key", payload);
 
-        var invocation = _databaseMock.Invocations.Single(i => i.Method.Name == "StringSetAsync");
-        Assert.Equal(expectedBytes, (byte[])(RedisValue)invocation.Arguments[1]!);
+        var call = _database.ReceivedCalls().Single(c => c.GetMethodInfo().Name == "StringSetAsync");
+        Assert.Equal(expectedBytes, actual: (byte[])(RedisValue)call.GetArguments()[1]!);
     }
 
     [Fact]
@@ -84,8 +84,8 @@ public class RedisCacheProviderTests
     {
         await _provider.SetAsync("key", new TestPayload("x", 1));
 
-        var invocation = _databaseMock.Invocations.Single(i => i.Method.Name == "StringSetAsync");
-        Assert.Equal((Expiration)_settings.DefaultExpiration, (Expiration)invocation.Arguments[2]!);
+        var call = _database.ReceivedCalls().Single(c => c.GetMethodInfo().Name == "StringSetAsync");
+        Assert.Equal((Expiration)_settings.DefaultExpiration, (Expiration)call.GetArguments()[2]!);
     }
 
     [Fact]
@@ -95,20 +95,20 @@ public class RedisCacheProviderTests
 
         await _provider.SetAsync("key", new TestPayload("x", 1), ttl);
 
-        var invocation = _databaseMock.Invocations.Single(i => i.Method.Name == "StringSetAsync");
-        Assert.Equal((Expiration)ttl, (Expiration)invocation.Arguments[2]!);
+        var call = _database.ReceivedCalls().Single(c => c.GetMethodInfo().Name == "StringSetAsync");
+        Assert.Equal((Expiration)ttl, (Expiration)call.GetArguments()[2]!);
     }
 
     [Fact]
     public async Task RemoveAsync_CallsKeyDeleteAsync_WithCorrectKey()
     {
         const string key = "key-to-remove";
-        _databaseMock
-            .Setup(d => d.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
-            .ReturnsAsync(true);
+        _database
+            .KeyDeleteAsync(Arg.Any<RedisKey>(), Arg.Any<CommandFlags>())
+            .Returns(true);
 
         await _provider.RemoveAsync(key);
 
-        _databaseMock.Verify(d => d.KeyDeleteAsync(key, It.IsAny<CommandFlags>()), Times.Once());
+        await _database.Received(1).KeyDeleteAsync(key, Arg.Any<CommandFlags>());
     }
 }

@@ -1,7 +1,7 @@
-using MediatR;
 using IntegratorAI.BuildingBlocks.Application;
 using IntegratorAI.BuildingBlocks.Application.Behaviors;
-using Moq;
+using MediatR;
+using NSubstitute;
 
 namespace IntegratorAI.BuildingBlocks.UnitTests.Application;
 
@@ -10,16 +10,16 @@ public class UnitOfWorkBehaviorTests
     private record TestRequest : IRequest<TestResponse>;
     private record TestResponse;
 
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly UnitOfWorkBehavior<TestRequest, TestResponse> _behavior;
 
     public UnitOfWorkBehaviorTests()
     {
-        _unitOfWorkMock
-            .Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(0);
+        _unitOfWork
+            .SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(0);
 
-        _behavior = new UnitOfWorkBehavior<TestRequest, TestResponse>(_unitOfWorkMock.Object);
+        _behavior = new UnitOfWorkBehavior<TestRequest, TestResponse>(_unitOfWork);
     }
 
     [Fact]
@@ -57,10 +57,13 @@ public class UnitOfWorkBehaviorTests
             callLog.Add("next");
             return Task.FromResult(new TestResponse());
         };
-        _unitOfWorkMock
-            .Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .Callback(() => callLog.Add("save"))
-            .ReturnsAsync(0);
+        _unitOfWork
+            .SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(callInfo => 
+            { 
+                callLog.Add("save");
+                return Task.FromResult(0); 
+            });
 
         await _behavior.Handle(new TestRequest(), next, CancellationToken.None);
 
@@ -75,6 +78,6 @@ public class UnitOfWorkBehaviorTests
 
         await _behavior.Handle(new TestRequest(), next, cts.Token);
 
-        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(cts.Token), Times.Once());
+        await _unitOfWork.Received(1).SaveChangesAsync(cts.Token);
     }
 }

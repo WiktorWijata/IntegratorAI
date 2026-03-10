@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using IntegratorAI.BuildingBlocks.Persistence.Conventions;
-using Moq;
+using NSubstitute;
 
 namespace IntegratorAI.BuildingBlocks.UnitTests.Persistence;
 
@@ -19,10 +19,10 @@ public class TableNameConventionTests
         var modelBuilder = new ModelBuilder();
         modelBuilder.Entity<EntityA>();
         var conventionModel = (IConventionModel)modelBuilder.Model;
-        var contextMock = new Mock<IConventionContext<IConventionModelBuilder>>();
+        var contextMock = Substitute.For<IConventionContext<IConventionModelBuilder>>();
         var convention = new TableNameConvention();
 
-        convention.ProcessModelFinalizing(conventionModel.Builder, contextMock.Object);
+        convention.ProcessModelFinalizing(conventionModel.Builder, contextMock);
 
         Assert.Equal(nameof(EntityA), conventionModel.FindEntityType(typeof(EntityA))!.GetTableName());
     }
@@ -34,10 +34,10 @@ public class TableNameConventionTests
         modelBuilder.Entity<EntityA>();
         modelBuilder.Entity<EntityB>();
         var conventionModel = (IConventionModel)modelBuilder.Model;
-        var contextMock = new Mock<IConventionContext<IConventionModelBuilder>>();
+        var contextMock = Substitute.For<IConventionContext<IConventionModelBuilder>>();
         var convention = new TableNameConvention();
 
-        convention.ProcessModelFinalizing(conventionModel.Builder, contextMock.Object);
+        convention.ProcessModelFinalizing(conventionModel.Builder, contextMock);
 
         Assert.Equal(nameof(EntityA), conventionModel.FindEntityType(typeof(EntityA))!.GetTableName());
         Assert.Equal(nameof(EntityB), conventionModel.FindEntityType(typeof(EntityB))!.GetTableName());
@@ -50,10 +50,10 @@ public class TableNameConventionTests
         modelBuilder.Entity<CustomerOrder>();
         var conventionModel = (IConventionModel)modelBuilder.Model;
         conventionModel.FindEntityType(typeof(CustomerOrder))!.SetTableName("customer_orders");
-        var contextMock = new Mock<IConventionContext<IConventionModelBuilder>>();
+        var contextMock = Substitute.For<IConventionContext<IConventionModelBuilder>>();
         var convention = new TableNameConvention();
 
-        convention.ProcessModelFinalizing(conventionModel.Builder, contextMock.Object);
+        convention.ProcessModelFinalizing(conventionModel.Builder, contextMock);
 
         Assert.Equal(nameof(CustomerOrder), conventionModel.FindEntityType(typeof(CustomerOrder))!.GetTableName());
     }

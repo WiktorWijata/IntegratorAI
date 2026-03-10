@@ -1,37 +1,37 @@
 using IntegratorAI.BuildingBlocks.Common.Models.Events;
 using IntegratorAI.BuildingBlocks.Domain.Event;
 using IntegratorAI.BuildingBlocks.Infrastructure.Event;
-using Moq;
+using NSubstitute;
 
 namespace IntegratorAI.BuildingBlocks.UnitTests.Infrastructure;
 
 public class EventBusTests
 {
-    private readonly Mock<IServiceProvider> _serviceProviderMock = new();
+    private readonly IServiceProvider _serviceProvider = Substitute.For<IServiceProvider>();
 
     private void SetupHandlers(params IHandleEvent<TestEvent>[] handlers)
     {
-        _serviceProviderMock
-            .Setup(x => x.GetService(typeof(IEnumerable<IHandleEvent<TestEvent>>)))
+        _serviceProvider
+            .GetService(typeof(IEnumerable<IHandleEvent<TestEvent>>))
             .Returns(handlers);
     }
 
     [Fact]
     public async Task PublishAsync_InvokesAllRegisteredHandlers()
     {
-        var handlerMock1 = new Mock<IHandleEvent<TestEvent>>();
-        var handlerMock2 = new Mock<IHandleEvent<TestEvent>>();
-        handlerMock1.Setup(h => h.Handle(It.IsAny<TestEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-        handlerMock2.Setup(h => h.Handle(It.IsAny<TestEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-        SetupHandlers(handlerMock1.Object, handlerMock2.Object);
+        var handler1 = Substitute.For<IHandleEvent<TestEvent>>();
+        var handler2 = Substitute.For<IHandleEvent<TestEvent>>();
+        handler1.Handle(Arg.Any<TestEvent>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        handler2.Handle(Arg.Any<TestEvent>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        SetupHandlers(handler1, handler2);
 
-        var eventBus = new EventBus(_serviceProviderMock.Object);
+        var eventBus = new EventBus(_serviceProvider);
         var @event = new TestEvent();
 
         await eventBus.PublishAsync(@event);
 
-        handlerMock1.Verify(h => h.Handle(@event, It.IsAny<CancellationToken>()), Times.Once());
-        handlerMock2.Verify(h => h.Handle(@event, It.IsAny<CancellationToken>()), Times.Once());
+        await handler1.Received(1).Handle(@event, Arg.Any<CancellationToken>());
+        await handler2.Received(1).Handle(@event, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class EventBusTests
     {
         SetupHandlers();
 
-        var eventBus = new EventBus(_serviceProviderMock.Object);
+        var eventBus = new EventBus(_serviceProvider);
 
         var exception = await Record.ExceptionAsync(() => eventBus.PublishAsync(new TestEvent()));
 
@@ -49,15 +49,15 @@ public class EventBusTests
     [Fact]
     public async Task PublishAsync_PassesCancellationToken_ToHandlers()
     {
-        var handlerMock = new Mock<IHandleEvent<TestEvent>>();
-        handlerMock.Setup(h => h.Handle(It.IsAny<TestEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-        SetupHandlers(handlerMock.Object);
+        var handler = Substitute.For<IHandleEvent<TestEvent>>();
+        handler.Handle(Arg.Any<TestEvent>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        SetupHandlers(handler);
 
-        var eventBus = new EventBus(_serviceProviderMock.Object);
+        var eventBus = new EventBus(_serviceProvider);
         using var cts = new CancellationTokenSource();
 
         await eventBus.PublishAsync(new TestEvent(), cts.Token);
 
-        handlerMock.Verify(h => h.Handle(It.IsAny<TestEvent>(), cts.Token), Times.Once());
+        await handler.Received(1).Handle(Arg.Any<TestEvent>(), cts.Token);
     }
 }
