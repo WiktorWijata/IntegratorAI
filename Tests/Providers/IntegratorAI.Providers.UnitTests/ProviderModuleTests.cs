@@ -1,19 +1,19 @@
+using Microsoft.Extensions.DependencyInjection;
 using IntegratorAI.BuildingBlocks.Application.Caching;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using IntegratorAI.Providers.Domain;
 using IntegratorAI.Providers.Domain.Repositories;
 using IntegratorAI.Providers.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using NSubstitute;
 
 namespace IntegratorAI.Providers.UnitTests;
 
 public class ProviderModuleTests
 {
-    private readonly Mock<IProviderRepository> _repositoryMock = new();
-    private readonly Mock<IKeyedServiceProvider> _serviceProviderMock = new();
-    private readonly Mock<ICacheProvider> _cacheMock = new();
+    private readonly IProviderRepository _repository = Substitute.For<IProviderRepository>();
+    private readonly IKeyedServiceProvider _serviceProvider = Substitute.For<IKeyedServiceProvider>();
+    private readonly ICacheProvider _cache = Substitute.For<ICacheProvider>();
     private readonly FakeProvider _fakeProvider = new();
     private readonly ProviderModule _module;
 
@@ -30,25 +30,25 @@ public class ProviderModuleTests
 
     public ProviderModuleTests()
     {
-        _serviceProviderMock
-            .Setup(sp => sp.GetKeyedService(typeof(IProvider), ProviderType.HuggingFace))
-            .Returns(_fakeProvider);
+        _serviceProvider
+            .GetKeyedService(typeof(IProvider), Arg.Any<object?>())
+            .Returns(callInfo => (object)_fakeProvider);
 
         _module = new ProviderModule(
-            _repositoryMock.Object,
-            _serviceProviderMock.Object,
-            _cacheMock.Object);
+            _repository,
+            _serviceProvider,
+            _cache);
     }
 
     private void SetupCacheHit()
-        => _cacheMock
-            .Setup(c => c.GetAsync<Provider>(It.IsAny<string>()))
-            .ReturnsAsync(ActiveProvider);
+        => _cache
+            .GetAsync<Provider>(Arg.Any<string>())
+            .Returns(ActiveProvider);
 
     private void SetupCacheMiss()
-        => _cacheMock
-            .Setup(c => c.GetAsync<Provider>(It.IsAny<string>()))
-            .ReturnsAsync((Provider?)null);
+        => _cache
+            .GetAsync<Provider>(Arg.Any<string>())
+            .Returns((Provider?)null);
 
 
     [Fact]
@@ -83,33 +83,33 @@ public class ProviderModuleTests
 
         await _module.CompletionAsync(EmptyCompletion);
 
-        _repositoryMock.Verify(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()), Times.Never);
+        await _repository.DidNotReceive().GetActiveProviderAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task CompletionAsync_FetchesFromRepository_WhenCacheIsEmpty()
     {
         SetupCacheMiss();
-        _repositoryMock
-            .Setup(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ActiveProvider);
+        _repository
+            .GetActiveProviderAsync(Arg.Any<CancellationToken>())
+            .Returns(ActiveProvider);
 
         await _module.CompletionAsync(EmptyCompletion);
 
-        _repositoryMock.Verify(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()), Times.Once);
+        await _repository.Received(1).GetActiveProviderAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task CompletionAsync_SavesProviderToCache_WhenFetchedFromRepository()
     {
         SetupCacheMiss();
-        _repositoryMock
-            .Setup(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ActiveProvider);
+        _repository
+            .GetActiveProviderAsync(Arg.Any<CancellationToken>())
+            .Returns(ActiveProvider);
 
         await _module.CompletionAsync(EmptyCompletion);
 
-        _cacheMock.Verify(c => c.SetAsync(It.IsAny<string>(), ActiveProvider, It.IsAny<TimeSpan?>()), Times.Once);
+        await _cache.Received(1).SetAsync(Arg.Any<string>(), ActiveProvider, Arg.Any<TimeSpan?>());
     }
 
     [Fact]
@@ -120,7 +120,7 @@ public class ProviderModuleTests
         await _module.CompletionAsync(EmptyCompletion);
         await _module.CompletionAsync(EmptyCompletion);
 
-        _cacheMock.Verify(c => c.GetAsync<Provider>(It.IsAny<string>()), Times.Once);
+        await _cache.Received(1).GetAsync<Provider>(Arg.Any<string>());
     }
 
 
@@ -128,9 +128,9 @@ public class ProviderModuleTests
     public async Task CompletionAsync_ThrowsInvalidOperationException_WhenNoProviderRegistered()
     {
         SetupCacheHit();
-        _serviceProviderMock
-            .Setup(sp => sp.GetKeyedService(typeof(IProvider), ProviderType.HuggingFace))
-            .Returns((object?)null);
+        _serviceProvider
+            .GetKeyedService(typeof(IProvider), Arg.Any<object?>())
+            .Returns(callInfo => (object?)null);
 
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => _module.CompletionAsync(EmptyCompletion));
@@ -164,20 +164,20 @@ public class ProviderModuleTests
 
         await _module.SummaryCompletionAsync(EmptyCompletion);
 
-        _repositoryMock.Verify(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()), Times.Never);
+        await _repository.DidNotReceive().GetActiveProviderAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task SummaryCompletionAsync_FetchesFromRepository_WhenCacheIsEmpty()
     {
         SetupCacheMiss();
-        _repositoryMock
-            .Setup(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ActiveProvider);
+        _repository
+            .GetActiveProviderAsync(Arg.Any<CancellationToken>())
+            .Returns(ActiveProvider);
 
         await _module.SummaryCompletionAsync(EmptyCompletion);
 
-        _repositoryMock.Verify(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()), Times.Once);
+        await _repository.Received(1).GetActiveProviderAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -205,22 +205,22 @@ public class ProviderModuleTests
     {
         SetupCacheMiss();
         var cts = new CancellationTokenSource();
-        _repositoryMock
-            .Setup(r => r.GetActiveProviderAsync(cts.Token))
-            .ReturnsAsync(ActiveProvider);
+        _repository
+            .GetActiveProviderAsync(cts.Token)
+            .Returns(ActiveProvider);
 
         await _module.CompletionAsync(EmptyCompletion, cts.Token);
 
-        _repositoryMock.Verify(r => r.GetActiveProviderAsync(cts.Token), Times.Once);
+        await _repository.Received(1).GetActiveProviderAsync(cts.Token);
     }
 
     [Fact]
     public async Task CompletionAsync_ThrowsInvalidOperationException_WhenRepositoryReturnsNull()
     {
         SetupCacheMiss();
-        _repositoryMock
-            .Setup(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new InvalidOperationException("No active provider found."));
+        _repository
+            .GetActiveProviderAsync(Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<Provider>(new InvalidOperationException("No active provider found.")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => _module.CompletionAsync(EmptyCompletion));
@@ -230,9 +230,9 @@ public class ProviderModuleTests
     public async Task SummaryCompletionAsync_ThrowsInvalidOperationException_WhenNoProviderRegistered()
     {
         SetupCacheHit();
-        _serviceProviderMock
-            .Setup(sp => sp.GetKeyedService(typeof(IProvider), ProviderType.HuggingFace))
-            .Returns((object?)null);
+        _serviceProvider
+            .GetKeyedService(typeof(IProvider), Arg.Any<object?>())
+            .Returns(callInfo => (object?)null);
 
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => _module.SummaryCompletionAsync(EmptyCompletion));
@@ -242,13 +242,13 @@ public class ProviderModuleTests
     public async Task SummaryCompletionAsync_SavesProviderToCache_WhenFetchedFromRepository()
     {
         SetupCacheMiss();
-        _repositoryMock
-            .Setup(r => r.GetActiveProviderAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ActiveProvider);
+        _repository
+            .GetActiveProviderAsync(Arg.Any<CancellationToken>())
+            .Returns(ActiveProvider);
 
         await _module.SummaryCompletionAsync(EmptyCompletion);
 
-        _cacheMock.Verify(c => c.SetAsync(It.IsAny<string>(), ActiveProvider, It.IsAny<TimeSpan?>()), Times.Once);
+        await _cache.Received(1).SetAsync(Arg.Any<string>(), ActiveProvider, Arg.Any<TimeSpan?>());
     }
 
     [Fact]
@@ -259,7 +259,7 @@ public class ProviderModuleTests
         await _module.SummaryCompletionAsync(EmptyCompletion);
         await _module.SummaryCompletionAsync(EmptyCompletion);
 
-        _cacheMock.Verify(c => c.GetAsync<Provider>(It.IsAny<string>()), Times.Once);
+        await _cache.Received(1).GetAsync<Provider>(Arg.Any<string>());
     }
 
     [Fact]
@@ -270,7 +270,7 @@ public class ProviderModuleTests
         await _module.CompletionAsync(EmptyCompletion);
         await _module.SummaryCompletionAsync(EmptyCompletion);
 
-        _cacheMock.Verify(c => c.GetAsync<Provider>(It.IsAny<string>()), Times.Once);
+        await _cache.Received(1).GetAsync<Provider>(Arg.Any<string>());
     }
 
     [Fact]
@@ -281,11 +281,11 @@ public class ProviderModuleTests
         await _module.SummaryCompletionAsync(EmptyCompletion);
         await _module.CompletionAsync(EmptyCompletion);
 
-        _cacheMock.Verify(c => c.GetAsync<Provider>(It.IsAny<string>()), Times.Once);
+        await _cache.Received(1).GetAsync<Provider>(Arg.Any<string>());
     }
 
 
-    private sealed class FakeProvider : IProvider, IProviderInitalizable
+    private sealed class FakeProvider : IProvider, IProviderInitalizable 
     {
         public string PrimaryModel { get; set; } = string.Empty;
         public string SummarizationModel { get; set; } = string.Empty;
