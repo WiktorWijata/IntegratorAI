@@ -177,6 +177,56 @@ public class CompletionTests
 
         Assert.Same(originalSummary, completion.Summary);
     }
+
+    [Fact]
+    public void ContextMessages_ReturnsAllMessages_WhenNoSummary()
+    {
+        var completion = new Completion(UserMessage());
+        completion.AddMessage(new Message(MessageRole.Assistant, "reply"));
+
+        var context = completion.ContextMessages.ToList();
+
+        Assert.Equal(2, context.Count);
+        Assert.DoesNotContain(context, m => m.Role == MessageRole.System);
+    }
+
+    [Fact]
+    public void ContextMessages_StartsWithSystemMessage_WhenSummaryExists()
+    {
+        var completion = new Completion(UserMessage());
+        completion.AddMessage(new Message(MessageRole.Assistant, "reply"));
+        completion.SetSummary("summary content", summarizedUpToIndex: 1);
+
+        var first = completion.ContextMessages.First();
+
+        Assert.Equal(MessageRole.System, first.Role);
+    }
+
+    [Fact]
+    public void ContextMessages_SystemMessageContainsSummaryContent()
+    {
+        var completion = new Completion(UserMessage());
+        completion.SetSummary("important summary", summarizedUpToIndex: 1);
+
+        var systemMessage = completion.ContextMessages.First();
+
+        Assert.Contains("important summary", systemMessage.Content);
+    }
+
+    [Fact]
+    public void ContextMessages_ReturnsUnsummarizedMessagesAfterSystemMessage()
+    {
+        var completion = new Completion(UserMessage("msg1"));
+        completion.AddMessage(new Message(MessageRole.Assistant, "msg2"));
+        completion.AddMessage(new Message(MessageRole.User, "msg3"));
+        completion.SetSummary("summary", summarizedUpToIndex: 2);
+
+        var context = completion.ContextMessages.ToList();
+
+        Assert.Equal(2, context.Count);
+        Assert.Equal(MessageRole.System, context[0].Role);
+        Assert.Equal("msg3", context[1].Content);
+    }
 }
 
 
