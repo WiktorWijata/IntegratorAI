@@ -2,12 +2,13 @@ using MediatR;
 
 namespace IntegratorAI.BuildingBlocks.Application.Behaviors;
 
-public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class UnitOfWorkBehavior<TRequest, TResponse, TUnitOfWork> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
+    where TUnitOfWork : IUnitOfWork
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly TUnitOfWork _unitOfWork;
 
-    public UnitOfWorkBehavior(IUnitOfWork unitOfWork)
+    public UnitOfWorkBehavior(TUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }

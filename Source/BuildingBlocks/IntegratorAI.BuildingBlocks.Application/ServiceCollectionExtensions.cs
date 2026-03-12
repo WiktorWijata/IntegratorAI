@@ -7,7 +7,8 @@ namespace IntegratorAI.BuildingBlocks.Application;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddMediatR(this IServiceCollection services, params Assembly[] assemblies)
+    public static void AddMediatR<TUnitOfWork>(this IServiceCollection services, params Assembly[] assemblies)
+        where TUnitOfWork : class, IUnitOfWork
     {
         services.AddMediatR(cfg =>
         {
@@ -35,7 +36,7 @@ public static class ServiceCollectionExtensions
 
                 services.AddTransient(
                     typeof(IPipelineBehavior<,>).MakeGenericType(command.RequestType, command.ResponseType),
-                    typeof(UnitOfWorkBehavior<,>).MakeGenericType(command.RequestType, command.ResponseType)
+                    typeof(UnitOfWorkBehavior<,,>).MakeGenericType(command.RequestType, command.ResponseType, typeof(TUnitOfWork))
                 );
             }
         }

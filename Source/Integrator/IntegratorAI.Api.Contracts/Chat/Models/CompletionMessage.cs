@@ -1,4 +1,4 @@
-﻿namespace IntegratorAI.Api.Contracts.Chat
+﻿namespace IntegratorAI.Api.Contracts.Chat.Models
 {
     public class CompletionMessage
     {

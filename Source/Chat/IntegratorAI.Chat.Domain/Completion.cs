@@ -13,9 +13,13 @@ public class Completion : AggregateRoot<Guid>
     public IEnumerable<ContextMessage> ContextMessages => GetContextMessages();
     public ICollection<Message> Messages { get; protected set; } = new List<Message>();
 
-    public Completion(Message message)
+    public Completion(Message message, Message? systemMessage = null)
     {
         CreatedAt = DateTime.UtcNow;
+        if (systemMessage is not null)
+        {
+            AddMessage(systemMessage);
+        }
         AddMessage(message);
     }
 

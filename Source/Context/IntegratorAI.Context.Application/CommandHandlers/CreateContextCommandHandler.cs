@@ -1,0 +1,36 @@
+﻿using IntegratorAI.Context.Contracts.Commands;
+using IntegratorAI.Context.Domain;
+using IntegratorAI.Context.Domain.Repositories;
+using MediatR;
+
+namespace IntegratorAI.Context.Application.CommandHandlers;
+
+public class CreateContextCommandHandler : IRequestHandler<CreateContextCommand, Guid>
+{
+    private readonly IContextRepository _contextRepository;
+
+    public CreateContextCommandHandler(IContextRepository contextRepository)
+    {
+        _contextRepository = contextRepository;
+    }
+
+    public async Task<Guid> Handle(CreateContextCommand request, CancellationToken cancellationToken)
+    {
+        var context = new Domain.Context(
+            name: request.Name,
+            systemPrompt: request.SystemPrompt,
+            tools: request.Tools?.Select(t => new Tool(
+                name: t.Name,
+                description: t.Description,
+                parameters: t.Parameters?.Select(p => new ToolParameter
+                {
+                    Name = p.Name,
+                    Type = p.Type,
+                    Description = p.Description
+                }).ToList()
+            )).ToList());
+
+        await _contextRepository.AddAsync(context, cancellationToken);
+        return context.Id;
+    }
+}

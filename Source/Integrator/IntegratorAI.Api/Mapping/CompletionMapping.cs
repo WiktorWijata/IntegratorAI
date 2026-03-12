@@ -1,4 +1,5 @@
 using IntegratorAI.Api.Contracts.Chat;
+using IntegratorAI.Api.Contracts.Chat.Models;
 using IntegratorAI.Chat.Contracts.Models;
 
 namespace IntegratorAI.Api.Mapping;

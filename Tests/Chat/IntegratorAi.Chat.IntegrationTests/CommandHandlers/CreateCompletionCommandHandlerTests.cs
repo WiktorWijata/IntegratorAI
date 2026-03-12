@@ -4,6 +4,7 @@ using IntegratorAI.Chat.Contracts.Commands;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Persistence;
 using IntegratorAI.Chat.Persistence.Repositories;
+using IntegratorAI.Context.Contracts;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ public class CreateCompletionCommandHandlerTests : IDisposable
     private readonly ChatDbContext _context;
     private readonly CompletionRepository _repository;
     private readonly IProviderModule _providerModule;
+    private readonly IContextModule _contextModule;
     private readonly CreateCompletionCommandHandler _handler;
 
     public CreateCompletionCommandHandlerTests()
@@ -30,8 +32,9 @@ public class CreateCompletionCommandHandlerTests : IDisposable
 
         _repository = new CompletionRepository(_context);
         _providerModule = Substitute.For<IProviderModule>();
+        _contextModule = Substitute.For<IContextModule>();
 
-        _handler = new CreateCompletionCommandHandler(_providerModule, _repository);
+        _handler = new CreateCompletionCommandHandler(_providerModule, _contextModule, _repository);
     }
 
     public void Dispose()

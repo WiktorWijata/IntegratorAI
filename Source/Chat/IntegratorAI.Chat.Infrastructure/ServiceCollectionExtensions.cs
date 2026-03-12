@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
     public static void AddChat(this IServiceCollection services, string connectionString, ChatSettings chatSettings)
     {
         services.AddSingleton(chatSettings);
-        services.AddMediatR(typeof(CreateCompletionCommandHandler).Assembly);
+        services.AddMediatR<ChatDbContext>(typeof(CreateCompletionCommandHandler).Assembly);
         services.AddEntityFramework(connectionString);
         services.AddEventBus(typeof(CompletionSummaryRequiredEventHandler).Assembly);
     }

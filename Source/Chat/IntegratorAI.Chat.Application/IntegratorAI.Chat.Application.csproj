@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\IntegratorAI.BuildingBlocks.Application\IntegratorAI.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\Context\IntegratorAI.Context.Contracts\IntegratorAI.Context.Contracts.csproj" />
     <ProjectReference Include="..\..\Providers\IntegratorAI.Providers.Contracts\IntegratorAI.Providers.Contracts.csproj" />
     <ProjectReference Include="..\IntegratorAI.Chat.Contracts\IntegratorAI.Chat.Contracts.csproj" />
     <ProjectReference Include="..\IntegratorAI.Chat.Domain\IntegratorAI.Chat.Domain.csproj" />

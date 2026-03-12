@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\IntegratorAI.BuildingBlocks.Infrastructure\IntegratorAI.BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Chat\IntegratorAI.Chat.Infrastructure\IntegratorAI.Chat.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Context\IntegratorAI.Context.Infrastructure\IntegratorAI.Context.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Providers\IntegratorAI.Providers.Infrastructure\IntegratorAI.Providers.Infrastructure.csproj" />
     <ProjectReference Include="..\IntegratorAI.Api.Contracts\IntegratorAI.Api.Contracts.csproj" />
   </ItemGroup>

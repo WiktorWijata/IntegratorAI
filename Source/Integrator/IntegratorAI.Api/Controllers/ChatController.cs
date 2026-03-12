@@ -11,6 +11,7 @@ namespace IntegratorAI.Api.Controllers;
 public class ChatController : ControllerBase
 {
     private readonly IMediator _mediator;
+
     public ChatController(IMediator mediator)
     {
         _mediator = mediator;
@@ -18,9 +19,9 @@ public class ChatController : ControllerBase
 
     [HttpPost("completions")]
     [ProducesResponseType(typeof(CompletionResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Create([FromBody] CompletionRequest completion, [FromQuery] bool useContext = false, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Create([FromBody] CompletionRequest completion, [FromHeader(Name = "Context-Id")] Guid? contextId = null, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(new CreateCompletionCommand(completion.Prompt), cancellationToken);
+        var result = await _mediator.Send(new CreateCompletionCommand(completion.Prompt, contextId), cancellationToken);
         return Ok(result.ToResponse());
     }
 
