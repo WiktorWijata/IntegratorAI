@@ -19,6 +19,7 @@ public class ContextController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] ContextRequest contextRequest, CancellationToken cancellationToken = default)
     {
         var command = new CreateContextCommand(
@@ -28,7 +29,8 @@ public class ContextController : ControllerBase
             decisionPolicy: contextRequest.DecisionPolicy,
             operatingRules: contextRequest.OperatingRules,
             outputFormat: contextRequest.OutputFormat,
-            tools: contextRequest.Tools.Select(t => t.ToDto())
+            tools: contextRequest.Tools.Select(t => t.ToDto()),
+            examples: contextRequest.Examples.Select(e => e.ToDto())
         );
 
         var contextId = await _mediator.Send(command, cancellationToken);

@@ -15,5 +15,6 @@ namespace IntegratorAI.Api.Contracts.Context
         public string OperatingRules { get; set; }
         public string OutputFormat { get; set; }
         public Tool[] Tools { get; set; }
+        public Example[] Examples { get; set; }
     }
 }

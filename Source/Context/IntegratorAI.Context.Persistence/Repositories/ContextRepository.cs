@@ -14,7 +14,13 @@ public class ContextRepository : IContextRepository
 
     public async Task<Domain.Context?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Contexts.SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
+        return await _context.Contexts
+            .Include(c => c.Tools)
+                .ThenInclude(t => t.Parameters)
+            .Include(c => c.Tools)
+                .ThenInclude(t => t.Guardrails)
+            .Include(c => c.Examples)
+            .SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 
     public async Task AddAsync(Domain.Context context, CancellationToken cancellationToken = default)

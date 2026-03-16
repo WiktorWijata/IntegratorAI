@@ -12,5 +12,10 @@ public class ToolConfiguration : IEntityTypeConfiguration<Tool>
                .WithOne()
                .HasForeignKey(p => p.ToolId)
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(t => t.Guardrails)
+               .WithOne()
+               .HasForeignKey(g => g.ToolId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

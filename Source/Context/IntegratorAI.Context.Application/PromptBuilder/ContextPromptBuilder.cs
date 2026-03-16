@@ -11,33 +11,50 @@ public static class ContextPromptBuilder
         .WithTypeConverter(new LiteralStringConverter())
         .Build();
 
-    public static string ToYaml(ContextAggregate context)
+    extension(ContextAggregate context)
     {
-        var dto = new ContextPromptDto
+        public string ToYaml()
         {
-            SystemRole = context.SystemRole,
-            DomainContext = context.DomainContext,
-            DecisionPolicy = context.DecisionPolicy,
-            OperatingRules = context.OperatingRules,
-            Tools = context.Tools.Count > 0
-                ? context.Tools.Select(t => new ToolDto
-                {
-                    Name = t.Name,
-                    Description = t.Description,
-                    Parameters = t.Parameters.Count > 0
-                        ? t.Parameters.Select(p => new ToolParameterDto
-                        {
-                            Name = p.Name,
-                            Type = p.Type,
-                            Description = p.Description
-                        }).ToList()
-                        : null
-                }).ToList()
-                : null,
-            OutputFormat = context.OutputFormat
-        };
+            var dto = new ContextPromptDto
+            {
+                SystemRole = context.SystemRole,
+                DomainContext = context.DomainContext,
+                DecisionPolicy = context.DecisionPolicy,
+                OperatingRules = context.OperatingRules,
+                Tools = context.Tools.Count > 0
+                    ? [.. context.Tools.Select(t => new ToolDto
+                    {
+                        Name = t.Name,
+                        Description = t.Description,
+                        Parameters = t.Parameters.Count > 0
+                            ? [.. t.Parameters.Select(p => new ToolParameterDto
+                            {
+                                Name = p.Name,
+                                Type = p.Type,
+                                Description = p.Description
+                            })]
+                            : null,
+                        Guardrails = t.Guardrails.Count > 0
+                            ? [.. t.Guardrails.Select(g => new GuardrailDto
+                            {
+                                Description = g.Description,
+                                RequiresConfirmation = g.RequiresConfirmation
+                            })]
+                            : null
+                    })]
+                    : null,
+                Examples = context.Examples.Count > 0
+                    ? [.. context.Examples.Select(e => new ExampleDto
+                    {
+                        Input = e.Input,
+                        ExpectedResponse = e.ExpectedResponse
+                    })]
+                    : null,
+                OutputFormat = context.OutputFormat
+            };
 
-        return _serializer.Serialize(dto).TrimEnd();
+            return _serializer.Serialize(dto).TrimEnd();
+        }
     }
 }
 

@@ -2,14 +2,14 @@
 
 public class Tool
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
     public Guid ContextId { get; set; }
     public string Name { get; protected set; } = null!;
     public string Description { get; protected set; } = null!;
     public ICollection<ToolParameter> Parameters { get; set; }
     public ICollection<Guardrail> Guardrails { get; set; }
 
-    public Tool(string name, string description, ICollection<ToolParameter>? parameters)
+    public Tool(string name, string description, ICollection<ToolParameter>? parameters, ICollection<Guardrail>? guardrails)
     {
         Name = name;
         Description = description;
@@ -21,6 +21,14 @@ public class Tool
             foreach (var parameter in parameters)
             {
                 AddParameter(parameter);
+            }
+        }
+
+        if (guardrails is not null)
+        {
+            foreach (var guardrail in guardrails)
+            {
+                Guardrails.Add(guardrail);
             }
         }
     }

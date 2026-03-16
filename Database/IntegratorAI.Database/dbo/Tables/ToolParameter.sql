@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[ToolParameter]
 (
-	[Id]			INT				NOT NULL PRIMARY KEY IDENTITY(1,1),
-	[ToolId]		INT				NOT NULL,
+	[Id]			BIGINT			NOT NULL PRIMARY KEY IDENTITY(1,1),
+	[ToolId]		BIGINT			NOT NULL,
 	[Name]			NVARCHAR(255)	NOT NULL,
 	[Type]			NVARCHAR(50)	NOT NULL,
 	[Description]	NVARCHAR(MAX)	NOT NULL,

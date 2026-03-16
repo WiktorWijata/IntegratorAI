@@ -31,7 +31,14 @@ public class CreateContextCommandHandler : IRequestHandler<CreateContextCommand,
                     Name = p.Name,
                     Type = p.Type,
                     Description = p.Description
-                }).ToList()
+                }).ToList(),
+                guardrails: t.Guardrails?.Select(g => new Guardrail(
+                    description: g.Description,
+                    requiresConfirmation: g.RequiresConfirmation)).ToList()
+            )).ToList(),
+            examples: request.Examples?.Select(e => new Example(
+                input: e.Input,
+                expectedResponse: e.ExpectedResponse
             )).ToList());
 
         await _contextRepository.AddAsync(context, cancellationToken);

@@ -18,12 +18,14 @@ public class StreamChatController : ControllerBase
     }
 
     [HttpPost("completions")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Create([FromBody] CompletionRequest completion, [FromHeader(Name = "Context-Id")] Guid? contextId, CancellationToken cancellationToken)
     {
         return new SseResult(_mediator.CreateStream(new StreamCreateCompletionCommand(completion.Prompt, contextId), cancellationToken));
     }
 
     [HttpPost("completions/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Continue(Guid id, [FromBody] CompletionRequest completion, CancellationToken cancellationToken)
     {
         return new SseResult(_mediator.CreateStream(new StreamContinueCompletionCommand(id, completion.Prompt), cancellationToken));

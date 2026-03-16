@@ -29,6 +29,7 @@ public class ChatController : ControllerBase
 
     [HttpPost("completions")]
     [ProducesResponseType(typeof(CompletionResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] CompletionRequest completion, [FromHeader(Name = "Context-Id")] Guid? contextId = null, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(new CreateCompletionCommand(completion.Prompt, contextId), cancellationToken);
@@ -37,6 +38,7 @@ public class ChatController : ControllerBase
 
     [HttpPost("completions/{id:guid}")]
     [ProducesResponseType(typeof(CompletionResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Continue(Guid id, [FromBody] CompletionRequest completion, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new ContinueCompletionCommand(id, completion.Prompt), cancellationToken);

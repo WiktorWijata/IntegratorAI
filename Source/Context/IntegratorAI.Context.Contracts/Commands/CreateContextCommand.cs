@@ -14,7 +14,8 @@ namespace IntegratorAI.Context.Contracts.Commands
             string decisionPolicy, 
             string operatingRules, 
             string outputFormat, 
-            IEnumerable<ToolDto> tools = null)
+            IEnumerable<ToolDto> tools = null,
+            IEnumerable<ExampleDto> examples = null)
         {
             Name = name;
             SystemRole = systemRole;
@@ -23,6 +24,7 @@ namespace IntegratorAI.Context.Contracts.Commands
             OperatingRules = operatingRules;
             OutputFormat = outputFormat;
             Tools = tools;
+            Examples = examples;
         }
 
         public string Name { get; }
@@ -32,6 +34,7 @@ namespace IntegratorAI.Context.Contracts.Commands
         public string OperatingRules { get; }
         public string OutputFormat { get; }
         public IEnumerable<ToolDto> Tools { get; }
+        public IEnumerable<ExampleDto> Examples { get; }
     }
 }
 

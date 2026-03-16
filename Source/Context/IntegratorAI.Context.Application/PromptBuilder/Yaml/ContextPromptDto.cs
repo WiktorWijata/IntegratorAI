@@ -19,6 +19,9 @@ internal sealed class ContextPromptDto
     [YamlMember(Alias = "TOOLS")]
     public List<ToolDto>? Tools { get; set; }
 
+    [YamlMember(Alias = "EXAMPLES")]
+    public List<ExampleDto>? Examples { get; set; }
+
     [YamlMember(Alias = "OUTPUT_FORMAT")]
     public LiteralString? OutputFormat { get; set; }
 }

@@ -6,16 +6,19 @@ namespace IntegratorAI.Api.Mapping;
 
 public static class CompletionMapping
 {
-    public static CompletionResponse ToResponse(this CompletionDto dto)
+    extension(CompletionDto dto)
     {
-        return new CompletionResponse
+        public CompletionResponse ToResponse()
         {
-            Id = dto.CompletionId,
-            Messages = dto.Messages?.Select(m => new Message
+            return new CompletionResponse
             {
-                Role = m.Role.ToString().ToLowerInvariant(),
-                Content = m.Content
-            }).ToArray()
-        };
+                Id = dto.CompletionId,
+                Messages = dto.Messages?.Select(m => new Message
+                {
+                    Role = m.Role.ToString().ToLowerInvariant(),
+                    Content = m.Content
+                }).ToArray()
+            };
+        }
     }
 }

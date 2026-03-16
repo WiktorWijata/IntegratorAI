@@ -12,4 +12,7 @@ internal sealed class ToolDto
 
     [YamlMember(Alias = "parameters")]
     public List<ToolParameterDto>? Parameters { get; set; }
+
+    [YamlMember(Alias = "guardrails")]
+    public List<GuardrailDto>? Guardrails { get; set; }
 }

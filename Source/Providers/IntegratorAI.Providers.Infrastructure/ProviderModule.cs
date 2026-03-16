@@ -45,7 +45,9 @@ public class ProviderModule : IProviderModule
     private async Task<IProvider> GetActiveProviderAsync(CancellationToken cancellationToken = default)
     {
         if (_provider is not null)
+        {
             return _provider;
+        }
 
         var provider = await _cacheProvider.GetAsync<Provider>(CacheKeys.ActiveProvider);
 

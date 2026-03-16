@@ -11,5 +11,7 @@ namespace IntegratorAI.Api.Contracts.Context.Models
         public string Description { get; set; }
 
         public ToolParameter[] Parameters { get; set; }
+
+        public Guardrail[] Guardrails { get; set; }
     }
 }

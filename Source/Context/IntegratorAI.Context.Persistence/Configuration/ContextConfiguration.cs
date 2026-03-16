@@ -11,5 +11,10 @@ public class ContextConfiguration : IEntityTypeConfiguration<Domain.Context>
                .WithOne()
                .HasForeignKey(t => t.ContextId)
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(c => c.Examples)
+               .WithOne()
+               .HasForeignKey(e => e.ContextId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }
