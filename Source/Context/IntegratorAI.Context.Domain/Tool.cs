@@ -2,17 +2,19 @@
 
 public class Tool
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     public Guid ContextId { get; set; }
     public string Name { get; protected set; } = null!;
     public string Description { get; protected set; } = null!;
     public ICollection<ToolParameter> Parameters { get; set; }
+    public ICollection<Guardrail> Guardrails { get; set; }
 
     public Tool(string name, string description, ICollection<ToolParameter>? parameters)
     {
         Name = name;
         Description = description;
         Parameters = new HashSet<ToolParameter>();
+        Guardrails = new HashSet<Guardrail>();
 
         if (parameters is not null)
         {
@@ -26,6 +28,7 @@ public class Tool
     protected Tool()
     {
         Parameters = new HashSet<ToolParameter>();
+        Guardrails = new HashSet<Guardrail>();
     }
 
     public void AddParameter(ToolParameter parameter)

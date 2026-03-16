@@ -1,6 +1,6 @@
-﻿namespace IntegratorAI.Providers.Contracts.Models
+﻿namespace IntegratorAI.Api.Contracts.Chat.Models
 {
-    public class MessageDto
+    public class Message
     {
         public string Role { get; set; }
         public string Content { get; set; }

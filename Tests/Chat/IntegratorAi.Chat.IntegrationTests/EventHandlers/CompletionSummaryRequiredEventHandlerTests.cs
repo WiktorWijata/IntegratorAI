@@ -38,14 +38,14 @@ public class CompletionSummaryRequiredEventHandlerTests
     {
         var completion = BuildCompletion(4);
         _providerModule
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "summary text" });
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "summary text" });
 
         await _handler.Handle(new CompletionSummaryRequiredEvent(completion));
 
         await _providerModule
             .Received(1)
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>());
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -53,8 +53,8 @@ public class CompletionSummaryRequiredEventHandlerTests
     {
         var completion = BuildCompletion(4);
         _providerModule
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "summary text" });
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "summary text" });
 
         await _handler.Handle(new CompletionSummaryRequiredEvent(completion));
 
@@ -67,8 +67,8 @@ public class CompletionSummaryRequiredEventHandlerTests
     {
         var completion = BuildCompletion(4);
         _providerModule
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "summary" });
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "summary" });
 
         await _handler.Handle(new CompletionSummaryRequiredEvent(completion));
 
@@ -80,8 +80,8 @@ public class CompletionSummaryRequiredEventHandlerTests
     {
         var completion = BuildCompletion(4);
         _providerModule
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "summary" });
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "summary" });
 
         await _handler.Handle(new CompletionSummaryRequiredEvent(completion));
 
@@ -95,15 +95,15 @@ public class CompletionSummaryRequiredEventHandlerTests
         completion.SetSummary("previous summary", summarizedUpToIndex: 2);
 
         _providerModule
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "new summary" });
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "new summary" });
 
         await _handler.Handle(new CompletionSummaryRequiredEvent(completion));
 
         await _providerModule
             .Received(1)
             .SummaryCompletionAsync(
-                Arg.Is<CompletionDto>(dto =>
+                Arg.Is<ProviderCompletionDto>(dto =>
                     dto.Messages[0].Role == "system" &&
                     dto.Messages[0].Content.Contains("previous summary")),
                 Arg.Any<CancellationToken>());
@@ -114,15 +114,15 @@ public class CompletionSummaryRequiredEventHandlerTests
     {
         var completion = BuildCompletion(4);
         _providerModule
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "summary" });
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "summary" });
 
         await _handler.Handle(new CompletionSummaryRequiredEvent(completion));
 
         await _providerModule
             .Received(1)
             .SummaryCompletionAsync(
-                Arg.Is<CompletionDto>(dto =>
+                Arg.Is<ProviderCompletionDto>(dto =>
                     dto.Messages.All(m => m.Role != "system")),
                 Arg.Any<CancellationToken>());
     }
@@ -134,8 +134,8 @@ public class CompletionSummaryRequiredEventHandlerTests
         completion.SetSummary("old summary", summarizedUpToIndex: 2);
 
         _providerModule
-            .SummaryCompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "updated summary" });
+            .SummaryCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "updated summary" });
 
         await _handler.Handle(new CompletionSummaryRequiredEvent(completion));
 

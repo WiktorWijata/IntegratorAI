@@ -2,14 +2,15 @@
 
 namespace IntegratorAI.Api.Contracts.Context.Models
 {
-    public class ContextTool
+    public class ToolParameter
     {
         [Required]
         public string Name { get; set; }
 
         [Required]
-        public string Description { get; set; }
+        public string Type { get; set; }
 
-        public ContextToolParameter[] Parameters { get; set; }
+        [Required]
+        public string Description { get; set; }
     }
 }

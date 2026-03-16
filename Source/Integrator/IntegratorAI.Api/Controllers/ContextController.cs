@@ -23,9 +23,13 @@ public class ContextController : ControllerBase
     {
         var command = new CreateContextCommand(
             name: contextRequest.Name,
-            systemPrompt: contextRequest.SystemPrompt,
+            systemRole: contextRequest.SystemRole,
+            domainContext: contextRequest.DomainContext,
+            decisionPolicy: contextRequest.DecisionPolicy,
+            operatingRules: contextRequest.OperatingRules,
+            outputFormat: contextRequest.OutputFormat,
             tools: contextRequest.Tools.Select(t => t.ToDto())
-        ); 
+        );
 
         var contextId = await _mediator.Send(command, cancellationToken);
         return Ok(contextId);

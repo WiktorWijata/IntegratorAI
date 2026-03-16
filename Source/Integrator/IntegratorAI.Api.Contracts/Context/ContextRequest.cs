@@ -9,8 +9,11 @@ namespace IntegratorAI.Api.Contracts.Context
         public string Name { get; set; }
 
         [Required]
-        public string SystemPrompt { get; set; }
-
-        public ContextTool[] Tools { get; set; }
+        public string SystemRole { get; set; }
+        public string DomainContext { get; set; }
+        public string DecisionPolicy { get; set; }
+        public string OperatingRules { get; set; }
+        public string OutputFormat { get; set; }
+        public Tool[] Tools { get; set; }
     }
 }

@@ -7,15 +7,31 @@ namespace IntegratorAI.Context.Contracts.Commands
 {
     public class CreateContextCommand : IRequest<Guid>
     {
-        public CreateContextCommand(string name, string systemPrompt, IEnumerable<ContextToolDto> tools = null)
+        public CreateContextCommand(
+            string name, 
+            string systemRole, 
+            string domainContext, 
+            string decisionPolicy, 
+            string operatingRules, 
+            string outputFormat, 
+            IEnumerable<ToolDto> tools = null)
         {
             Name = name;
-            SystemPrompt = systemPrompt;
+            SystemRole = systemRole;
+            DomainContext = domainContext;
+            DecisionPolicy = decisionPolicy;
+            OperatingRules = operatingRules;
+            OutputFormat = outputFormat;
             Tools = tools;
         }
 
-        public string Name { get; set; }
-        public string SystemPrompt { get; set; }
-        public IEnumerable<ContextToolDto> Tools { get; set; }
+        public string Name { get; }
+        public string SystemRole { get; }
+        public string DomainContext { get; }
+        public string DecisionPolicy { get; }
+        public string OperatingRules { get; }
+        public string OutputFormat { get; }
+        public IEnumerable<ToolDto> Tools { get; }
     }
 }
+

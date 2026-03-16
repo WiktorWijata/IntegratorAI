@@ -6,11 +6,12 @@ namespace IntegratorAI.Providers.Infrastructure.HuggingFace.Mapping;
 
 public static class MessageMapping
 {
-    public static MessageRequest ToRequest(this CompletionDto dto, string model)
+    public static MessageRequest ToRequest(this ProviderCompletionDto dto, string model, bool stream = false)
     {
         return new MessageRequest
         {
             Model = model,
+            Stream = stream,
             Messages = dto.Messages?.Select(m => new Message
             {
                 Role = m.Role?.ToLowerInvariant(),
@@ -19,9 +20,9 @@ public static class MessageMapping
         };
     }
 
-    public static MessageDto ToMessageDto(this Choice choice)
+    public static ProviderMessageDto ToMessageDto(this Choice choice)
     {
-        return new MessageDto {
+        return new ProviderMessageDto {
             Role = choice.Message?.Role,
             Content = choice.Message?.Content
         };

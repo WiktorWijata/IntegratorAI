@@ -1,3 +1,4 @@
+using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Chat.Contracts.Commands;
 using IntegratorAI.Chat.Contracts.Models;
 using IntegratorAI.Chat.Domain;
@@ -8,7 +9,7 @@ using MediatR;
 
 namespace IntegratorAI.Chat.Application.CommandHandlers;
 
-public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompletionCommand, CompletionResponseDto>
+public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompletionCommand, CompletionDto>
 {
     private readonly IProviderModule _providerModule;
     private readonly ICompletionRepository _completionRepository;
@@ -21,19 +22,16 @@ public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompleti
         _chatSettings = chatSettings;
     }
 
-    public async Task<CompletionResponseDto> Handle(ContinueCompletionCommand request, CancellationToken cancellationToken)
+    public async Task<CompletionDto> Handle(ContinueCompletionCommand request, CancellationToken cancellationToken)
     {
-        var completion = await _completionRepository.GetByIdAsync(request.CompletionId, cancellationToken);
-        if (completion == null) 
-        {
-            throw new InvalidOperationException($"Completion with id '{request.CompletionId}' was not found.");
-        }
+        var completion = await _completionRepository.GetByIdAsync(request.CompletionId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Completion), request.CompletionId);
 
         completion.AddMessage(new Message(MessageRole.User, request.Prompt));
 
-        var completionDto = new CompletionDto
+        var completionDto = new ProviderCompletionDto
         {
-            Messages = completion.ContextMessages.Select(m => new MessageDto
+            Messages = completion.ContextMessages.Select(m => new ProviderMessageDto
             {
                 Role = m.Role.ToString(),
                 Content = m.Content
@@ -49,10 +47,10 @@ public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompleti
 
         completion.TrySummarize(_chatSettings.SummarizationThreshold);
 
-        return new CompletionResponseDto
+        return new CompletionDto
         {
             CompletionId = completion.Id.ToString(),
-            Messages = completion.Messages.Select(m => new CompletionMessageDto
+            Messages = completion.Messages.Select(m => new MessageDto
             {
                 Role = Enum.Parse<MessageRoleDto>(m.Role.ToString(), true),
                 Content = m.Content

@@ -18,7 +18,11 @@ public class CreateContextCommandHandler : IRequestHandler<CreateContextCommand,
     {
         var context = new Domain.Context(
             name: request.Name,
-            systemPrompt: request.SystemPrompt,
+            systemRole: request.SystemRole,
+            domainContext: request.DomainContext,
+            decisionPolicy: request.DecisionPolicy,
+            operatingRules: request.OperatingRules,
+            outputFormat: request.OutputFormat,
             tools: request.Tools?.Select(t => new Tool(
                 name: t.Name,
                 description: t.Description,

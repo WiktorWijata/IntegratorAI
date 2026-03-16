@@ -9,7 +9,7 @@ using MediatR;
 
 namespace IntegratorAI.Chat.Application.CommandHandlers;
 
-public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCommand, CompletionResponseDto>
+public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCommand, CompletionDto>
 {
     private readonly IProviderModule _providerModule;
     private readonly IContextModule _contextModule;
@@ -25,7 +25,7 @@ public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCo
         _completionRepository = completionRepository;
     }
 
-    public async Task<CompletionResponseDto> Handle(CreateCompletionCommand request, CancellationToken cancellationToken)
+    public async Task<CompletionDto> Handle(CreateCompletionCommand request, CancellationToken cancellationToken)
     {
         Message? systemMessage = null;
         if (request.ContextId.HasValue)
@@ -40,9 +40,9 @@ public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCo
         );
 
         await _completionRepository.AddAsync(completion, cancellationToken);
-        var messageDto = await _providerModule.CompletionAsync(new CompletionDto
+        var messageDto = await _providerModule.CompletionAsync(new ProviderCompletionDto
         {
-            Messages = completion.Messages.Select(m => new MessageDto
+            Messages = completion.Messages.Select(m => new ProviderMessageDto
             {
                 Role = m.Role.ToString(),
                 Content = m.Content
@@ -56,10 +56,10 @@ public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCo
             )
         );
 
-        var response = new CompletionResponseDto
+        var response = new CompletionDto
         {
             CompletionId = completion.Id.ToString(),
-            Messages = completion.Messages.Select(m => new CompletionMessageDto
+            Messages = completion.Messages.Select(m => new MessageDto
             {
                 Role = Enum.Parse<MessageRoleDto>(m.Role.ToString(), true),
                 Content = m.Content

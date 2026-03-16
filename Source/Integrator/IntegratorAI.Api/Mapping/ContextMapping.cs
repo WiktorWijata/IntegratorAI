@@ -5,16 +5,16 @@ namespace IntegratorAI.Api.Mapping;
 
 public static class ContextMapping
 {
-    public static ContextToolDto ToDto(this ContextTool contextTool)
+    public static ToolDto ToDto(this Tool contextTool)
     {
-        return new ContextToolDto(
+        return new ToolDto(
             name: contextTool.Name,
             description: contextTool.Description,
             parameters: contextTool.Parameters.Select(p => p.ToDto()));
     }
 
-    public static ContextToolParameterDto ToDto(this ContextToolParameter parameter)
+    public static ToolParameterDto ToDto(this ToolParameter parameter)
     {
-        return new ContextToolParameterDto(parameter.Name, parameter.Type, parameter.Description);
+        return new ToolParameterDto(parameter.Name, parameter.Type, parameter.Description);
     }
 }

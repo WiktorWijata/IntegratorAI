@@ -4,7 +4,7 @@ using MediatR;
 
 namespace IntegratorAI.Chat.Contracts.Commands
 {
-    public class ContinueCompletionCommand : IRequest<CompletionResponseDto>
+    public class ContinueCompletionCommand : IRequest<CompletionDto>
     {
         public ContinueCompletionCommand(Guid completionId, string prompt)
         {

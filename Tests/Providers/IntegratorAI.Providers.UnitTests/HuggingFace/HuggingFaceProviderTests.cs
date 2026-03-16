@@ -23,8 +23,8 @@ public class HuggingFaceProviderTests
         };
     }
 
-    private static CompletionDto BuildCompletion(params (string Role, string Content)[] messages)
-        => new() { Messages = messages.Select(m => new MessageDto { Role = m.Role, Content = m.Content }).ToArray() };
+    private static ProviderCompletionDto BuildCompletion(params (string Role, string Content)[] messages)
+        => new() { Messages = messages.Select(m => new ProviderMessageDto { Role = m.Role, Content = m.Content }).ToArray() };
 
     private static MessageResponse BuildChatResponse(string role, string content)
         => new() { Choices = [new Choice { Message = new Message { Role = role, Content = content } }] };

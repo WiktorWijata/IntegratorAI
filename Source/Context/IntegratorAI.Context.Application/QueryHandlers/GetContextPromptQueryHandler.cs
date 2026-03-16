@@ -1,4 +1,6 @@
-﻿using IntegratorAI.Context.Contracts.Queries;
+﻿using IntegratorAI.BuildingBlocks.Domain;
+using IntegratorAI.Context.Application.PromptBuilder;
+using IntegratorAI.Context.Contracts.Queries;
 using IntegratorAI.Context.Domain.Repositories;
 using MediatR;
 
@@ -15,12 +17,9 @@ public class GetContextPromptQueryHandler : IRequestHandler<GetContextPromptQuer
 
     public async Task<string> Handle(GetContextPromptQuery request, CancellationToken cancellationToken)
     {
-        var context = await _contextRepository.GetByIdAsync(request.ContextId, cancellationToken);
-        if (context is null)
-        {
-            throw new InvalidOperationException($"Context with id '{request.ContextId}' was not found.");
-        }
+        var context = await _contextRepository.GetByIdAsync(request.ContextId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Context), request.ContextId);
 
-        return context.SystemPrompt;
+        return ContextPromptBuilder.ToYaml(context);
     }
 }

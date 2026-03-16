@@ -2,6 +2,7 @@
 using IntegratorAI.Api.Contracts.Chat;
 using IntegratorAI.Api.Mapping;
 using IntegratorAI.Chat.Contracts.Commands;
+using IntegratorAI.Chat.Contracts.Queries;
 using MediatR;
 
 namespace IntegratorAI.Api.Controllers;
@@ -15,6 +16,15 @@ public class ChatController : ControllerBase
     public ChatController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet("completions/{id:guid}")]
+    [ProducesResponseType(typeof(CompletionResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetCompletionQuery(id), cancellationToken);
+        return Ok(result.ToResponse());
     }
 
     [HttpPost("completions")]

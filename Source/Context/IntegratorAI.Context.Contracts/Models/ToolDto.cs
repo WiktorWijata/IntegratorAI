@@ -2,9 +2,9 @@
 
 namespace IntegratorAI.Context.Contracts.Models
 {
-    public class ContextToolDto
+    public class ToolDto
     {
-        public ContextToolDto(string name, string description, IEnumerable<ContextToolParameterDto> parameters = null)
+        public ToolDto(string name, string description, IEnumerable<ToolParameterDto> parameters = null)
         {
             Name = name;
             Description = description;
@@ -13,6 +13,6 @@ namespace IntegratorAI.Context.Contracts.Models
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public IEnumerable<ContextToolParameterDto> Parameters { get; set; }
+        public IEnumerable<ToolParameterDto> Parameters { get; set; }
     }
 }

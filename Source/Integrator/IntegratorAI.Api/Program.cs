@@ -1,5 +1,6 @@
 using IntegratorAI.BuildingBlocks.Infrastructure;
 using IntegratorAI.BuildingBlocks.Infrastructure.Caching.Redis;
+using IntegratorAI.Api.Middleware;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Infrastructure;
 using IntegratorAI.Context.Infrastructure;
@@ -23,6 +24,8 @@ builder.Services.AddContext(connectionString!);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -32,6 +35,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

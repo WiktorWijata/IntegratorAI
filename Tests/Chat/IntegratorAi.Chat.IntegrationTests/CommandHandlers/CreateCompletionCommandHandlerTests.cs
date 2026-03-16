@@ -47,8 +47,8 @@ public class CreateCompletionCommandHandlerTests : IDisposable
     public async Task Handle_ReturnsDtoWithUserAndAssistantMessages()
     {
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "AI response" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "AI response" });
 
         var command = new CreateCompletionCommand("Hello");
 
@@ -64,8 +64,8 @@ public class CreateCompletionCommandHandlerTests : IDisposable
     public async Task Handle_ReturnsNonEmptyCompletionId()
     {
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "reply" });
 
         var result = await _handler.Handle(new CreateCompletionCommand("Hi"), CancellationToken.None);
 
@@ -77,8 +77,8 @@ public class CreateCompletionCommandHandlerTests : IDisposable
     public async Task Handle_PersistsCompletionInDatabase()
     {
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "reply" });
 
         var result = await _handler.Handle(new CreateCompletionCommand("Hello"), CancellationToken.None);
 
@@ -99,15 +99,15 @@ public class CreateCompletionCommandHandlerTests : IDisposable
     public async Task Handle_SendsUserMessageToProvider()
     {
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "reply" });
 
         await _handler.Handle(new CreateCompletionCommand("Test prompt"), CancellationToken.None);
 
         await _providerModule
             .Received(1)
             .CompletionAsync(
-                Arg.Is<CompletionDto>(dto =>
+                Arg.Is<ProviderCompletionDto>(dto =>
                     dto.Messages.Length == 1 &&
                     dto.Messages[0].Content == "Test prompt"),
                 Arg.Any<CancellationToken>());
@@ -117,8 +117,8 @@ public class CreateCompletionCommandHandlerTests : IDisposable
     public async Task Handle_SetsCorrectRolesInResponse()
     {
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "AI reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "AI reply" });
 
         var result = await _handler.Handle(new CreateCompletionCommand("Hello"), CancellationToken.None);
 

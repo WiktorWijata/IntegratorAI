@@ -22,16 +22,16 @@ public class CompletionSummaryRequiredEventHandler : IHandleEvent<CompletionSumm
         var completion = @event.Completion;
         var unsummarized = completion.UnsummarizedMessages.ToList();
 
-        MessageDto[] summaryMessage = completion.Summary != null
-            ? [new MessageDto { Role = "system", Content = $"Summary: {completion.Summary.Content}" }]
+        ProviderMessageDto[] summaryMessage = completion.Summary != null
+            ? [new ProviderMessageDto { Role = "system", Content = $"Summary: {completion.Summary.Content}" }]
             : [];
 
-        var completionDto = new CompletionDto
+        var completionDto = new ProviderCompletionDto
         {
             Messages =
             [
                 .. summaryMessage,
-                .. unsummarized.Select(m => new MessageDto
+                .. unsummarized.Select(m => new ProviderMessageDto
                 {
                     Role = m.Role.ToString(),
                     Content = m.Content

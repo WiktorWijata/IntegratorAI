@@ -26,7 +26,7 @@ public class ProviderModuleTests
         IsActive = true
     };
 
-    private static readonly CompletionDto EmptyCompletion = new() { Messages = [] };
+    private static readonly ProviderCompletionDto EmptyCompletion = new() { Messages = [] };
 
     public ProviderModuleTests()
     {
@@ -55,7 +55,7 @@ public class ProviderModuleTests
     public async Task CompletionAsync_ReturnsDelegatedResult()
     {
         SetupCacheHit();
-        var expected = new MessageDto { Role = "assistant", Content = "reply" };
+        var expected = new ProviderMessageDto { Role = "assistant", Content = "reply" };
         _fakeProvider.CompletionResult = expected;
 
         var result = await _module.CompletionAsync(EmptyCompletion);
@@ -67,7 +67,7 @@ public class ProviderModuleTests
     public async Task SummaryCompletionAsync_ReturnsDelegatedResult()
     {
         SetupCacheHit();
-        var expected = new MessageDto { Role = "system", Content = "summary" };
+        var expected = new ProviderMessageDto { Role = "system", Content = "summary" };
         _fakeProvider.SummaryResult = expected;
 
         var result = await _module.SummaryCompletionAsync(EmptyCompletion);
@@ -290,13 +290,16 @@ public class ProviderModuleTests
         public string PrimaryModel { get; set; } = string.Empty;
         public string SummarizationModel { get; set; } = string.Empty;
 
-        public MessageDto? CompletionResult { get; set; }
-        public MessageDto? SummaryResult { get; set; }
+        public ProviderMessageDto? CompletionResult { get; set; }
+        public ProviderMessageDto? SummaryResult { get; set; }
 
-        public Task<MessageDto> CompletionAsync(CompletionDto completion)
-            => Task.FromResult(CompletionResult ?? new MessageDto());
+        public Task<ProviderMessageDto> CompletionAsync(ProviderCompletionDto completion)
+            => Task.FromResult(CompletionResult ?? new ProviderMessageDto());
 
-        public Task<MessageDto> SummaryCompletionAsync(CompletionDto completion)
-            => Task.FromResult(SummaryResult ?? new MessageDto());
+        public Task<ProviderMessageDto> SummaryCompletionAsync(ProviderCompletionDto completion)
+            => Task.FromResult(SummaryResult ?? new ProviderMessageDto());
+
+        public IAsyncEnumerable<string> StreamCompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default)
+            => AsyncEnumerable.Empty<string>();
     }
 }

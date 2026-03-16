@@ -1,8 +1,8 @@
 ﻿namespace IntegratorAI.Context.Contracts.Models
 {
-    public class ContextToolParameterDto
+    public class ToolParameterDto
     {
-        public ContextToolParameterDto(string name, string type, string description)
+        public ToolParameterDto(string name, string type, string description)
         {
             Name = name;
             Type = type;
