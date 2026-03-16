@@ -1,4 +1,4 @@
-﻿using IntegratorAI.Chat.Contracts.Commands;
+﻿using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Contracts.Models;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Repositories;

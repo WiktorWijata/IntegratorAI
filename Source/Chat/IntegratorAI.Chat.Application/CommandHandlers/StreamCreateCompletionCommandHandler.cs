@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
-using IntegratorAI.Chat.Contracts.Commands;
+using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Context.Contracts;

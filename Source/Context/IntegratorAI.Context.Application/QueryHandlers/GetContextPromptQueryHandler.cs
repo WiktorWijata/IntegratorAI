@@ -1,6 +1,6 @@
 ﻿using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Context.Application.PromptBuilder;
-using IntegratorAI.Context.Contracts.Queries;
+using IntegratorAI.Context.Application.Queries;
 using IntegratorAI.Context.Domain.Repositories;
 using MediatR;
 

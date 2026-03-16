@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IntegratorAI.Api.Contracts.Chat;
 using IntegratorAI.Api.Mapping;
-using IntegratorAI.Chat.Contracts.Commands;
-using IntegratorAI.Chat.Contracts.Queries;
-using MediatR;
+using IntegratorAI.Chat.Contracts;
 
 namespace IntegratorAI.Api.Controllers;
 
@@ -11,11 +9,11 @@ namespace IntegratorAI.Api.Controllers;
 [Route("[controller]")]
 public class ChatController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IChatModule _chatModule;
 
-    public ChatController(IMediator mediator)
+    public ChatController(IChatModule chatModule)
     {
-        _mediator = mediator;
+        _chatModule = chatModule;
     }
 
     [HttpGet("completions/{id:guid}")]
@@ -23,7 +21,7 @@ public class ChatController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetCompletionQuery(id), cancellationToken);
+        var result = await _chatModule.GetCompletion(id, cancellationToken);
         return Ok(result.ToResponse());
     }
 
@@ -32,7 +30,7 @@ public class ChatController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] CompletionRequest completion, [FromHeader(Name = "Context-Id")] Guid? contextId = null, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(new CreateCompletionCommand(completion.Prompt, contextId), cancellationToken);
+        var result = await _chatModule.CreateCompletion(completion.Prompt, contextId, cancellationToken);
         return Ok(result.ToResponse());
     }
 
@@ -41,7 +39,7 @@ public class ChatController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Continue(Guid id, [FromBody] CompletionRequest completion, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new ContinueCompletionCommand(id, completion.Prompt), cancellationToken);
+        var result = await _chatModule.ContinueCompletion(id, completion.Prompt, cancellationToken);
         return Ok(result.ToResponse());
     }
 }

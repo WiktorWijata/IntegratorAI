@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IntegratorAI.Api.Contracts.Context;
 using IntegratorAI.Api.Mapping;
-using IntegratorAI.Context.Contracts.Commands;
-using MediatR;
+using IntegratorAI.Context.Contracts;
 
 namespace IntegratorAI.Api.Controllers;
 
@@ -10,11 +9,11 @@ namespace IntegratorAI.Api.Controllers;
 [Route("[controller]")]
 public class ContextController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IContextModule _contextModule;
 
-    public ContextController(IMediator mediator)
+    public ContextController(IContextModule contextModule)
     {
-        _mediator = mediator;
+        _contextModule = contextModule;
     }
 
     [HttpPost]
@@ -22,7 +21,7 @@ public class ContextController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] ContextRequest contextRequest, CancellationToken cancellationToken = default)
     {
-        var command = new CreateContextCommand(
+        var contextId = await _contextModule.CreateContext(
             name: contextRequest.Name,
             systemRole: contextRequest.SystemRole,
             domainContext: contextRequest.DomainContext,
@@ -30,10 +29,9 @@ public class ContextController : ControllerBase
             operatingRules: contextRequest.OperatingRules,
             outputFormat: contextRequest.OutputFormat,
             tools: contextRequest.Tools.Select(t => t.ToDto()),
-            examples: contextRequest.Examples.Select(e => e.ToDto())
+            examples: contextRequest.Examples.Select(e => e.ToDto()),
+            cancellationToken: cancellationToken
         );
-
-        var contextId = await _mediator.Send(command, cancellationToken);
         return Ok(contextId);
     }
 }

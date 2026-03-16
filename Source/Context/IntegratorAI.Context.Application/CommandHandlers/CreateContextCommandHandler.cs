@@ -1,4 +1,4 @@
-﻿using IntegratorAI.Context.Contracts.Commands;
+﻿using IntegratorAI.Context.Application.Commands;
 using IntegratorAI.Context.Domain;
 using IntegratorAI.Context.Domain.Repositories;
 using MediatR;

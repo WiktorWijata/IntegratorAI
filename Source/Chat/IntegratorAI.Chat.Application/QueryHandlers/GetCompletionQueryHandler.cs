@@ -1,6 +1,6 @@
 using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Chat.Contracts.Models;
-using IntegratorAI.Chat.Contracts.Queries;
+using IntegratorAI.Chat.Application.Queries;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Repositories;
 using MediatR;

@@ -1,6 +1,6 @@
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Application.CommandHandlers;
-using IntegratorAI.Chat.Contracts.Commands;
+using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Persistence;
 using IntegratorAI.Chat.Persistence.Repositories;

@@ -15,6 +15,8 @@ public static class ServiceCollectionExtensions
             cfg.RegisterServicesFromAssemblies(assemblies);
         });
 
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+
         foreach (var assembly in assemblies)
         {
             var commandHandlerTypes = assembly.GetTypes()

@@ -1,19 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using IntegratorAI.Context.Contracts.Models;
 using MediatR;
 
-namespace IntegratorAI.Context.Contracts.Commands
+namespace IntegratorAI.Context.Application.Commands
 {
     public class CreateContextCommand : IRequest<Guid>
     {
         public CreateContextCommand(
-            string name, 
-            string systemRole, 
-            string domainContext, 
-            string decisionPolicy, 
-            string operatingRules, 
-            string outputFormat, 
+            string name,
+            string systemRole,
+            string domainContext,
+            string decisionPolicy,
+            string operatingRules,
+            string outputFormat,
             IEnumerable<ToolDto> tools = null,
             IEnumerable<ExampleDto> examples = null)
         {
@@ -37,4 +37,3 @@ namespace IntegratorAI.Context.Contracts.Commands
         public IEnumerable<ExampleDto> Examples { get; }
     }
 }
-

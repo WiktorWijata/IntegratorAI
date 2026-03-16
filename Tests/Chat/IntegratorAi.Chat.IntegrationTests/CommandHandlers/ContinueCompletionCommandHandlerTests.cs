@@ -1,6 +1,7 @@
+using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Application.CommandHandlers;
-using IntegratorAI.Chat.Contracts.Commands;
+using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Persistence;
 using IntegratorAI.Chat.Persistence.Repositories;
@@ -61,7 +62,7 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
     {
         var command = new ContinueCompletionCommand(Guid.NewGuid(), "follow up");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(command, CancellationToken.None));
     }
 
