@@ -26,7 +26,10 @@
   </Folder>
   <Folder Name="/Source/Context/">
     <Project Path="Source/Context/IntegratorAI.Context.Application/IntegratorAI.Context.Application.csproj" Id="721f4425-991e-4af9-a5e5-87018516cb99" />
+    <Project Path="Source/Context/IntegratorAI.Context.Contracts/IntegratorAI.Context.Contracts.csproj" Id="3473dc2b-fce1-4723-b4d3-1b829e1d9b2f" />
+    <Project Path="Source/Context/IntegratorAI.Context.Domain/IntegratorAI.Context.Domain.csproj" Id="43e2e61d-bc9c-486d-96ef-02f0e5adbbde" />
     <Project Path="Source/Context/IntegratorAI.Context.Infrastructure/IntegratorAI.Context.Infrastructure.csproj" Id="26053511-cfa5-4c9c-9fff-b208e38c8ae4" />
+    <Project Path="Source/Context/IntegratorAI.Context.Persistence/IntegratorAI.Context.Persistence.csproj" Id="72a3c80f-c5d9-44f4-b4cd-df66e33e478f" />
   </Folder>
   <Folder Name="/Source/Integrator/">
     <Project Path="Source/Integrator/IntegratorAI.Api.Contracts/IntegratorAI.Api.Contracts.csproj" Id="31e8acf8-c87e-4056-a02e-44be574a14aa" />

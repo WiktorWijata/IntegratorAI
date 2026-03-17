@@ -1,11 +1,12 @@
 using IntegratorAI.BuildingBlocks.Persistence;
+using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace IntegratorAI.Chat.Persistence;
 
-public class ChatDbContext : EfContext
+public class ChatDbContext : EfContext, IChatUnitOfWork
 {
     public ChatDbContext(DbContextOptions<ChatDbContext> options) : base(options) { }
 

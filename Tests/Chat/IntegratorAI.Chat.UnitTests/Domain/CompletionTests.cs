@@ -66,8 +66,8 @@ public class CompletionTests
 
         var unsummarized = completion.UnsummarizedMessages.ToList();
 
-        Assert.Equal(2, unsummarized.Count);
-        Assert.All(unsummarized, m => Assert.True(m.Index > 2));
+        Assert.Equal(3, unsummarized.Count);
+        Assert.All(unsummarized, m => Assert.True(m.Index > 1));
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public class CompletionTests
 
         var context = completion.ContextMessages.ToList();
 
-        Assert.Equal(2, context.Count);
+        Assert.Equal(1, context.Count);
         Assert.DoesNotContain(context, m => m.Role == MessageRole.System);
     }
 
@@ -223,9 +223,10 @@ public class CompletionTests
 
         var context = completion.ContextMessages.ToList();
 
-        Assert.Equal(2, context.Count);
+        Assert.Equal(3, context.Count);
         Assert.Equal(MessageRole.System, context[0].Role);
-        Assert.Equal("msg3", context[1].Content);
+        Assert.Equal("msg2", context[1].Content);
+        Assert.Equal("msg3", context[2].Content);
     }
 }
 

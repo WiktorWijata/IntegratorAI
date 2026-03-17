@@ -5,6 +5,8 @@ using IntegratorAI.Providers.Infrastructure.HuggingFace.Api;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Api.Requests;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Api.Responses;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Mapping;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace IntegratorAI.Providers.Infrastructure.HuggingFace;
 
@@ -20,7 +22,7 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
         _huggingFaceApi = huggingFaceApi;
     }
 
-    public async Task<MessageDto> CompletionAsync(CompletionDto completion)
+    public async Task<ProviderMessageDto> CompletionAsync(ProviderCompletionDto completion)
     {
         var request = completion.ToRequest(PrimaryModel);
         var response = await _huggingFaceApi.ChatAsync(request);
@@ -29,9 +31,46 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
         return choice.ToMessageDto();
     }
 
-    public async Task<MessageDto> SummaryCompletionAsync(CompletionDto completion)
+    public async IAsyncEnumerable<string> StreamCompletionAsync(ProviderCompletionDto completion, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var input = string.Join("\n", completion.Messages.Select(m => $"{m.Role}: {m.Content}"));
+        var request = completion.ToRequest(PrimaryModel, stream: true);
+
+        using var response = await _huggingFaceApi.StreamChatAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var reader = new StreamReader(stream);
+
+        while (!reader.EndOfStream && !cancellationToken.IsCancellationRequested)
+        {
+            var line = await reader.ReadLineAsync(cancellationToken);
+
+            if (string.IsNullOrWhiteSpace(line) || !line.StartsWith("data: "))
+                continue;
+
+            var json = line["data: ".Length..];
+
+            if (json == "[DONE]")
+            {
+                break;
+            }
+                
+
+            var chunk = JsonSerializer.Deserialize<MessageStreamChunk>(json);
+            var token = chunk?.Choices?.FirstOrDefault()?.Delta?.Content;
+
+            if (token is not null)
+            {
+                yield return token;
+            }
+        }
+    }
+
+    public async Task<ProviderMessageDto> SummaryCompletionAsync(ProviderCompletionDto completion)
+    {
+        var input = string.Join("\n", completion.Messages
+            .Where(x => x.Role.ToLowerInvariant() != PromptRoles.System.ToLowerInvariant())
+            .Select(m => $"{m.Role}: {m.Content}"));
 
         if (!string.IsNullOrEmpty(SummarizationModel))
         {
@@ -43,18 +82,18 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
             var summary = response.SingleOrDefault()?.SummaryText
                 ?? throw new InvalidOperationException("Summarization pipeline returned no result.");
 
-            return new MessageDto
+            return new ProviderMessageDto
             {
                 Role = PromptRoles.System,
                 Content = summary
             };
         }
 
-        var summaryCompletion = new CompletionDto
+        var summaryCompletion = new ProviderCompletionDto
         {
             Messages = new[]
             {
-                new MessageDto
+                new ProviderMessageDto
                 {
                     Role = PromptRoles.System,
                     Content = SystemPrompts.SummarizationPrompt

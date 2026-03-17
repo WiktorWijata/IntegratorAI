@@ -1,6 +1,7 @@
+using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Application.CommandHandlers;
-using IntegratorAI.Chat.Contracts.Commands;
+using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Persistence;
 using IntegratorAI.Chat.Persistence.Repositories;
@@ -61,7 +62,7 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
     {
         var command = new ContinueCompletionCommand(Guid.NewGuid(), "follow up");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(command, CancellationToken.None));
     }
 
@@ -70,8 +71,8 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
     {
         var completion = await SeedCompletionAsync(new Message(MessageRole.Assistant, "first reply"));
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "continued reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "continued reply" });
 
         var result = await _handler.Handle(
             new ContinueCompletionCommand(completion.Id, "follow up"),
@@ -86,8 +87,8 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
     {
         var completion = await SeedCompletionAsync(new Message(MessageRole.Assistant, "reply 1"));
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "reply" });
 
         await _handler.Handle(
             new ContinueCompletionCommand(completion.Id, "follow up"),
@@ -96,7 +97,7 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
         await _providerModule
             .Received(1)
             .CompletionAsync(
-                Arg.Is<CompletionDto>(dto => dto.Messages.Length == 3),
+                Arg.Is<ProviderCompletionDto>(dto => dto.Messages.Length == 2),
                 Arg.Any<CancellationToken>());
     }
 
@@ -112,8 +113,8 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
         _context.ChangeTracker.Clear();
 
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "reply" });
 
         await _handler.Handle(
             new ContinueCompletionCommand(completion.Id, "next question"),
@@ -122,7 +123,7 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
         await _providerModule
             .Received(1)
             .CompletionAsync(
-                Arg.Is<CompletionDto>(dto =>
+                Arg.Is<ProviderCompletionDto>(dto =>
                     dto.Messages[0].Role == "System" &&
                     dto.Messages[0].Content.Contains("conversation summary")),
                 Arg.Any<CancellationToken>());
@@ -133,8 +134,8 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
     {
         var completion = await SeedCompletionAsync();
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "reply" });
 
         await _handler.Handle(
             new ContinueCompletionCommand(completion.Id, "follow up"),
@@ -143,7 +144,7 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
         await _providerModule
             .Received(1)
             .CompletionAsync(
-                Arg.Is<CompletionDto>(dto =>
+                Arg.Is<ProviderCompletionDto>(dto =>
                     dto.Messages.All(m => m.Role != "System")),
                 Arg.Any<CancellationToken>());
     }
@@ -161,8 +162,8 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
             new Message(MessageRole.User, "msg 3"));
 
         _providerModule
-            .CompletionAsync(Arg.Any<CompletionDto>(), Arg.Any<CancellationToken>())
-            .Returns(new MessageDto { Role = "Assistant", Content = "reply" });
+            .CompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(new ProviderMessageDto { Role = "Assistant", Content = "reply" });
 
         var result = await handler.Handle(
             new ContinueCompletionCommand(completion.Id, "msg 5"),

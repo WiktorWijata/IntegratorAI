@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.0.0" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\IntegratorAI.BuildingBlocks.Application\IntegratorAI.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\IntegratorAI.Context.Contracts\IntegratorAI.Context.Contracts.csproj" />
+    <ProjectReference Include="..\IntegratorAI.Context.Domain\IntegratorAI.Context.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

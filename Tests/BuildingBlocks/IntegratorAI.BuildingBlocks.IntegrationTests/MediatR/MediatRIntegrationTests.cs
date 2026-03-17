@@ -8,11 +8,17 @@ namespace IntegratorAI.BuildingBlocks.IntegrationTests.MediatR;
 
 public class MediatRIntegrationTests
 {
+    private class StubUnitOfWork : IUnitOfWork
+    {
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => Task.FromResult(0);
+    }
+
     private readonly IServiceCollection _services = new ServiceCollection();
 
     public MediatRIntegrationTests()
     {
-        _services.AddMediatR(typeof(TestCommand).Assembly);
+        _services.AddScoped<IUnitOfWork, StubUnitOfWork>();
+        _services.AddMediatR<IUnitOfWork>(typeof(TestCommand).Assembly);
     }
 
     [Fact]
@@ -22,7 +28,7 @@ public class MediatRIntegrationTests
             d.ServiceType == typeof(IPipelineBehavior<TestCommand, Unit>));
 
         Assert.NotNull(descriptor);
-        Assert.Equal(typeof(UnitOfWorkBehavior<TestCommand, Unit>), descriptor.ImplementationType);
+        Assert.Equal(typeof(UnitOfWorkBehavior<TestCommand, Unit, IUnitOfWork>), descriptor.ImplementationType);
     }
 
     [Fact]

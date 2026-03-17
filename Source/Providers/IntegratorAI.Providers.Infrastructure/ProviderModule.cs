@@ -21,22 +21,33 @@ public class ProviderModule : IProviderModule
         _cacheProvider = cacheProvider;
     }
 
-    public async Task<MessageDto> CompletionAsync(CompletionDto completion, CancellationToken cancellationToken = default)
+    public async Task<ProviderMessageDto> CompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default)
     {
         var provider = await GetActiveProviderAsync(cancellationToken);
         return await provider.CompletionAsync(completion);
     }
 
-    public async Task<MessageDto> SummaryCompletionAsync(CompletionDto completion, CancellationToken cancellationToken = default)
+    public async Task<ProviderMessageDto> SummaryCompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default)
     {
         var provider = await GetActiveProviderAsync(cancellationToken);
         return await provider.SummaryCompletionAsync(completion);
     }
 
+    public async IAsyncEnumerable<string> StreamCompletionAsync(ProviderCompletionDto completion, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var provider = await GetActiveProviderAsync(cancellationToken);
+        await foreach (var token in provider.StreamCompletionAsync(completion, cancellationToken))
+        {
+            yield return token;
+        }
+    }
+
     private async Task<IProvider> GetActiveProviderAsync(CancellationToken cancellationToken = default)
     {
         if (_provider is not null)
+        {
             return _provider;
+        }
 
         var provider = await _cacheProvider.GetAsync<Provider>(CacheKeys.ActiveProvider);
 

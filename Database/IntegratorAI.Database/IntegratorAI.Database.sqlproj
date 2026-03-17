@@ -65,5 +65,10 @@
     <Build Include="dbo\Tables\Message.sql" />
     <Build Include="dbo\Tables\Provider.sql" />
     <Build Include="dbo\Tables\CompletionSummary.sql" />
+    <Build Include="dbo\Tables\Context.sql" />
+    <Build Include="dbo\Tables\Tool.sql" />
+    <Build Include="dbo\Tables\ToolParameter.sql" />
+    <Build Include="dbo\Tables\Example.sql" />
+    <Build Include="dbo\Tables\Guardrail.sql" />
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ public class UnitOfWorkBehaviorTests
     private record TestResponse;
 
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
-    private readonly UnitOfWorkBehavior<TestRequest, TestResponse> _behavior;
+    private readonly UnitOfWorkBehavior<TestRequest, TestResponse, IUnitOfWork> _behavior;
 
     public UnitOfWorkBehaviorTests()
     {
@@ -19,7 +19,7 @@ public class UnitOfWorkBehaviorTests
             .SaveChangesAsync(Arg.Any<CancellationToken>())
             .Returns(0);
 
-        _behavior = new UnitOfWorkBehavior<TestRequest, TestResponse>(_unitOfWork);
+        _behavior = new UnitOfWorkBehavior<TestRequest, TestResponse, IUnitOfWork>(_unitOfWork);
     }
 
     [Fact]

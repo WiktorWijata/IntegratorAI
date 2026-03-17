@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using IntegratorAI.BuildingBlocks.Persistence;
+using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Chat.Persistence.Repositories;
 
@@ -12,6 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddEntityFramework<ChatDbContext>(connectionString, repositories: repos =>
         {
             repos.AddScoped<ICompletionRepository, CompletionRepository>();
+            repos.AddScoped<IChatUnitOfWork>(sp => sp.GetRequiredService<ChatDbContext>());
         });
     }
 }

@@ -7,36 +7,50 @@ namespace IntegratorAI.BuildingBlocks.Application;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddMediatR(this IServiceCollection services, params Assembly[] assemblies)
+    public static void AddMediatR<TUnitOfWork>(this IServiceCollection services, params Assembly[] assemblies)
+        where TUnitOfWork : class, IUnitOfWork
     {
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(assemblies);
         });
 
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+
         foreach (var assembly in assemblies)
         {
-            var commandTypes = assembly.GetTypes()
-                .Where(t => t.Name.EndsWith("CommandHandler", StringComparison.Ordinal) && !t.IsAbstract)
-                .SelectMany(h => h.GetInterfaces()
-                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))
-                    .Select(i => new
-                    {
-                        RequestType = i.GetGenericArguments()[0],
-                        ResponseType = i.GetGenericArguments()[1]
-                    }));
+            var commandHandlerTypes = assembly.GetTypes()
+                .Where(t => t.Name.EndsWith("CommandHandler", StringComparison.Ordinal) && !t.IsAbstract);
 
-            foreach (var command in commandTypes)
+            foreach (var handlerType in commandHandlerTypes)
             {
-                if (!command.RequestType.Name.EndsWith("Command", StringComparison.Ordinal))
+                foreach (var iface in handlerType.GetInterfaces().Where(i => i.IsGenericType))
                 {
-                    continue;
-                }
+                    var genericDef = iface.GetGenericTypeDefinition();
+                    var args = iface.GetGenericArguments();
+                    var requestType = args[0];
+                    var responseType = args[1];
 
-                services.AddTransient(
-                    typeof(IPipelineBehavior<,>).MakeGenericType(command.RequestType, command.ResponseType),
-                    typeof(UnitOfWorkBehavior<,>).MakeGenericType(command.RequestType, command.ResponseType)
-                );
+                    if (!requestType.Name.EndsWith("Command", StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+
+                    if (genericDef == typeof(IRequestHandler<,>))
+                    {
+                        services.AddTransient(
+                            typeof(IPipelineBehavior<,>).MakeGenericType(requestType, responseType),
+                            typeof(UnitOfWorkBehavior<,,>).MakeGenericType(requestType, responseType, typeof(TUnitOfWork))
+                        );
+                    }
+                    else if (genericDef == typeof(IStreamRequestHandler<,>))
+                    {
+                        services.AddTransient(
+                            typeof(IStreamPipelineBehavior<,>).MakeGenericType(requestType, responseType),
+                            typeof(StreamUnitOfWorkBehavior<,,>).MakeGenericType(requestType, responseType, typeof(TUnitOfWork))
+                        );
+                    }
+                }
             }
         }
     }

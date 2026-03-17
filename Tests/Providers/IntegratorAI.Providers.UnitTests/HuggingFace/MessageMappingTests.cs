@@ -10,7 +10,7 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_SetsModelCorrectly()
     {
-        var dto = new CompletionDto { Messages = [] };
+        var dto = new ProviderCompletionDto { Messages = [] };
 
         var result = dto.ToRequest("test-model");
 
@@ -20,9 +20,9 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_ConvertsRoleToLowercase()
     {
-        var dto = new CompletionDto
+        var dto = new ProviderCompletionDto
         {
-            Messages = [new MessageDto { Role = "USER", Content = "hello" }]
+            Messages = [new ProviderMessageDto { Role = "USER", Content = "hello" }]
         };
 
         var result = dto.ToRequest("model");
@@ -33,9 +33,9 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_MapsContentCorrectly()
     {
-        var dto = new CompletionDto
+        var dto = new ProviderCompletionDto
         {
-            Messages = [new MessageDto { Role = "user", Content = "test content" }]
+            Messages = [new ProviderMessageDto { Role = "user", Content = "test content" }]
         };
 
         var result = dto.ToRequest("model");
@@ -46,7 +46,7 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_WhenMessagesIsNull_ReturnsNullMessages()
     {
-        var dto = new CompletionDto { Messages = null! };
+        var dto = new ProviderCompletionDto { Messages = null! };
 
         var result = dto.ToRequest("model");
 
@@ -56,12 +56,12 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_MapsMultipleMessages()
     {
-        var dto = new CompletionDto
+        var dto = new ProviderCompletionDto
         {
             Messages =
             [
-                new MessageDto { Role = "System", Content = "sys" },
-                new MessageDto { Role = "User", Content = "usr" }
+                new ProviderMessageDto { Role = "System", Content = "sys" },
+                new ProviderMessageDto { Role = "User", Content = "usr" }
             ]
         };
 
@@ -75,7 +75,7 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_StreamIsFalse_ByDefault()
     {
-        var dto = new CompletionDto { Messages = [] };
+        var dto = new ProviderCompletionDto { Messages = [] };
 
         var result = dto.ToRequest("model");
 
@@ -111,7 +111,7 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_WhenMessagesIsEmpty_ReturnsEmptyMessagesArray()
     {
-        var dto = new CompletionDto { Messages = [] };
+        var dto = new ProviderCompletionDto { Messages = [] };
 
         var result = dto.ToRequest("model");
 
@@ -122,13 +122,13 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_PreservesMessageOrder()
     {
-        var dto = new CompletionDto
+        var dto = new ProviderCompletionDto
         {
             Messages =
             [
-                new MessageDto { Role = "system", Content = "first" },
-                new MessageDto { Role = "user", Content = "second" },
-                new MessageDto { Role = "assistant", Content = "third" }
+                new ProviderMessageDto { Role = "system", Content = "first" },
+                new ProviderMessageDto { Role = "user", Content = "second" },
+                new ProviderMessageDto { Role = "assistant", Content = "third" }
             ]
         };
 
@@ -142,9 +142,9 @@ public class MessageMappingTests
     [Fact]
     public void ToRequest_HandlesNullRoleInMessage()
     {
-        var dto = new CompletionDto
+        var dto = new ProviderCompletionDto
         {
-            Messages = [new MessageDto { Role = null, Content = "hello" }]
+            Messages = [new ProviderMessageDto { Role = null, Content = "hello" }]
         };
 
         var result = dto.ToRequest("model");
