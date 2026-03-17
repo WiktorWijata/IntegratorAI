@@ -68,7 +68,9 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
 
     public async Task<ProviderMessageDto> SummaryCompletionAsync(ProviderCompletionDto completion)
     {
-        var input = string.Join("\n", completion.Messages.Select(m => $"{m.Role}: {m.Content}"));
+        var input = string.Join("\n", completion.Messages
+            .Where(x => x.Role.ToLowerInvariant() != PromptRoles.System.ToLowerInvariant())
+            .Select(m => $"{m.Role}: {m.Content}"));
 
         if (!string.IsNullOrEmpty(SummarizationModel))
         {

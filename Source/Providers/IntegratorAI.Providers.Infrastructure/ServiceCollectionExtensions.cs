@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Domain;
@@ -16,11 +17,19 @@ public static class ServiceCollectionExtensions
         var huggingFaceConfig = providersConfiguration.SingleOrDefault(p => p.Type == ProviderType.HuggingFace);
         if (huggingFaceConfig != null)
         {
-            services.AddRefitClient<IHuggingFaceApi>()
+            var refitSettings = new RefitSettings
+            {
+                ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                })
+            };
+
+            services.AddRefitClient<IHuggingFaceApi>(refitSettings)
                 .ConfigureHttpClient(c =>
                 {
                     c.BaseAddress = new Uri(huggingFaceConfig.BaseUrl);
-                    c.DefaultRequestHeaders.Authorization = 
+                    c.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("HF_API_KEY"));
                 });
         }
