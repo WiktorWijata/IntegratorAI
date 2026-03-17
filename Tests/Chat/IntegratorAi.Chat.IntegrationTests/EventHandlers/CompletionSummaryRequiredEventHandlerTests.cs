@@ -1,9 +1,11 @@
-using IntegratorAI.BuildingBlocks.Application;
+using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Application.EventHandlers;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Events;
+using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace IntegratorAI.Chat.IntegrationTests.EventHandlers;
@@ -11,14 +13,13 @@ namespace IntegratorAI.Chat.IntegrationTests.EventHandlers;
 public class CompletionSummaryRequiredEventHandlerTests
 {
     private readonly IProviderModule _providerModule;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IChatUnitOfWork _unitOfWork;
     private readonly CompletionSummaryRequiredEventHandler _handler;
 
     public CompletionSummaryRequiredEventHandlerTests()
     {
         _providerModule = Substitute.For<IProviderModule>();
-        _unitOfWork = Substitute.For<IUnitOfWork>();
-
+        _unitOfWork = Substitute.For<IChatUnitOfWork>();
         _handler = new CompletionSummaryRequiredEventHandler(_providerModule, _unitOfWork);
     }
 

@@ -1,5 +1,4 @@
-﻿using IntegratorAI.BuildingBlocks.Application;
-using IntegratorAI.BuildingBlocks.Domain.Event;
+﻿using IntegratorAI.BuildingBlocks.Domain.Event;
 using IntegratorAI.Chat.Domain.Events;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
@@ -9,9 +8,11 @@ namespace IntegratorAI.Chat.Application.EventHandlers;
 public class CompletionSummaryRequiredEventHandler : IHandleEvent<CompletionSummaryRequiredEvent>
 {
     private readonly IProviderModule _providerModule;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IChatUnitOfWork _unitOfWork;
 
-    public CompletionSummaryRequiredEventHandler(IProviderModule providerModule, IUnitOfWork unitOfWork)
+    public CompletionSummaryRequiredEventHandler(
+        IProviderModule providerModule, 
+        IChatUnitOfWork unitOfWork)
     {
         _providerModule = providerModule;
         _unitOfWork = unitOfWork;
