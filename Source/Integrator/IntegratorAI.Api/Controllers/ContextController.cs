@@ -5,6 +5,9 @@ using IntegratorAI.Context.Contracts;
 
 namespace IntegratorAI.Api.Controllers;
 
+/// <summary>
+/// Manages AI contexts that define the assistant's persona, domain knowledge and behavioral rules.
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class ContextController : ControllerBase
@@ -16,6 +19,14 @@ public class ContextController : ControllerBase
         _contextModule = contextModule;
     }
 
+    /// <summary>
+    /// Creates a new context and returns its unique identifier.
+    /// Pass the returned identifier as the <c>Context-Id</c> header when creating a completion
+    /// to apply this context to the conversation.
+    /// </summary>
+    /// <param name="contextRequest">Request body describing the context configuration.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The unique identifier of the newly created context.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
