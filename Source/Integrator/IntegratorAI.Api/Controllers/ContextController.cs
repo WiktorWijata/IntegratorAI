@@ -10,14 +10,9 @@ namespace IntegratorAI.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("[controller]")]
-public class ContextController : ControllerBase
+public class ContextController(IContextModule contextModule) : ControllerBase
 {
-    private readonly IContextModule _contextModule;
-
-    public ContextController(IContextModule contextModule)
-    {
-        _contextModule = contextModule;
-    }
+    private readonly IContextModule _contextModule = contextModule;
 
     /// <summary>
     /// Creates a new context and returns its unique identifier.
