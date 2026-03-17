@@ -97,7 +97,7 @@ public class ContinueCompletionCommandHandlerTests : IDisposable
         await _providerModule
             .Received(1)
             .CompletionAsync(
-                Arg.Is<ProviderCompletionDto>(dto => dto.Messages.Length == 3),
+                Arg.Is<ProviderCompletionDto>(dto => dto.Messages.Length == 2),
                 Arg.Any<CancellationToken>());
     }
 
