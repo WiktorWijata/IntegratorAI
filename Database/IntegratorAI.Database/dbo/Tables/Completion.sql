@@ -1,5 +1,0 @@
-CREATE TABLE [dbo].[Completion]
-(
-    [Id]        UNIQUEIDENTIFIER    NOT NULL PRIMARY KEY DEFAULT NEWID(),
-    [CreatedAt] DATETIME2           NOT NULL DEFAULT GETUTCDATE()
-)

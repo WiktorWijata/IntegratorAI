@@ -6,7 +6,15 @@ namespace IntegratorAI.BuildingBlocks.Persistence;
 
 public abstract class EfContext : DbContext, IUnitOfWork
 {
+    protected abstract string DefaultSchema { get; }
+
     protected EfContext(DbContextOptions options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.HasDefaultSchema(DefaultSchema);
+        base.OnModelCreating(modelBuilder);
+    }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

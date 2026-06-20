@@ -8,6 +8,8 @@ namespace IntegratorAI.Providers.Persistence;
 
 public class ProvidersDbContext : EfContext
 {
+    protected override string DefaultSchema => "providers";
+
     public ProvidersDbContext(DbContextOptions<ProvidersDbContext> options) : base(options)
     { }
 
@@ -15,6 +17,7 @@ public class ProvidersDbContext : EfContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProviderConfiguration).Assembly);
     }
 }

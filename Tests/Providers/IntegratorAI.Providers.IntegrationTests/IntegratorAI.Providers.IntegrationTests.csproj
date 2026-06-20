@@ -5,6 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
+        <!-- SQLitePCLRaw.lib.e_sqlite3 2.1.11 has GHSA-2m69-gcr7-jv3q vulnerability.
+             No fix available yet from the package author. Suppressed as this is a test-only project.
+             Track: https://github.com/advisories/GHSA-2m69-gcr7-jv3q -->
+        <NuGetAuditSuppress>https://github.com/advisories/GHSA-2m69-gcr7-jv3q</NuGetAuditSuppress>
     </PropertyGroup>
 
     <ItemGroup>

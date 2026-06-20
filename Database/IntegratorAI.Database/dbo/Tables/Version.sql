@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[Version]
+(
+	[Version]     NVARCHAR(20)  NOT NULL PRIMARY KEY,
+	[Description] NVARCHAR(255) NULL,
+	[AppliedAt]   DATETIME2     NOT NULL DEFAULT GETUTCDATE()
+)
