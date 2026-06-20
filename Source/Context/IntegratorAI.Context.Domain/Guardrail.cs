@@ -3,7 +3,7 @@
 public class Guardrail
 {
     public long Id { get; set; }
-    public int ToolId { get; protected set; }
+    public long ToolId { get; protected set; }
     public string? Description { get; protected set; }
     public bool RequiresConfirmation { get; protected set; }
 

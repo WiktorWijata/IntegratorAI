@@ -2,7 +2,7 @@
 
 public class Tool
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     public Guid ContextId { get; set; }
     public string Name { get; protected set; } = null!;
     public string Description { get; protected set; } = null!;
