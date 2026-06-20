@@ -1,0 +1,19 @@
+{
+  "ConnectionStrings": {
+	"IntegratorAI": "Server=<host>;Database=<database>;User Id=<user>;Password=<password>;TrustServerCertificate=True;"
+  },
+  "Chat": {
+	"SummarizationThreshold": 10
+  },
+  "Providers": [
+	{
+	  "Type": "HuggingFace",
+	  "BaseUrl": "https://router.huggingface.co"
+	}
+  ],
+  "Redis": {
+	"ConnectionString": "<host>:<port>",
+	"Password": null,
+	"DefaultExpiration": "01:00:00"
+  }
+}

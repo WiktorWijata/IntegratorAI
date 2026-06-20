@@ -370,3 +370,6 @@ Deployment/ai_todo_summary.md
 
 # Claude AI temp directories
 tmpclaude-*
+
+# Local development settings
+**/appsettings.Development.json

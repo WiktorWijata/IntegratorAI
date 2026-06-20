@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+	"IntegratorAI": "Server=<host>;Database=<database>;User Id=<user>;Password=<password>;TrustServerCertificate=True;"
+  }
+}
