@@ -11,8 +11,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  API_IMAGE: ghcr.io/${{ github.repository_owner }}/integratorai-api
-  MIGRATOR_IMAGE: ghcr.io/${{ github.repository_owner }}/integratorai-db-migrator
+  API_IMAGE: ghcr.io/wiktorwijata/integratorai-api
+  MIGRATOR_IMAGE: ghcr.io/wiktorwijata/integratorai-db-migrator
 
 jobs:
   push:
@@ -128,7 +128,7 @@ jobs:
 
             bash resolve-config.sh
 
-            echo "${GHCR_TOKEN}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+            echo "${GHCR_TOKEN}" | docker login ghcr.io -u wiktorwijata --password-stdin
             docker compose pull
             docker compose up -d
             docker image prune -f
