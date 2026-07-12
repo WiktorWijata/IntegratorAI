@@ -1,0 +1,33 @@
+name: integratorai-${ENV_NAME:-dev}
+
+services:
+  db-migrator:
+    image: ghcr.io/wiktorwijata/integratorai-db-migrator:${MIGRATOR_TAG:-dev-latest}
+    container_name: integratorai-db-migrator-${ENV_NAME:-dev}
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - ./config/migrator.appsettings.Production.json:/app/appsettings.Production.json:ro
+    networks:
+      - proxy
+    restart: "no"
+
+  api:
+    image: ghcr.io/wiktorwijata/integratorai-api:${API_TAG:-dev-latest}
+    container_name: integratorai-api-${ENV_NAME:-dev}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - HF_API_KEY=${HF_API_KEY}
+    volumes:
+      - ./config/api.appsettings.Production.json:/app/appsettings.Production.json:ro
+    networks:
+      - proxy
+    depends_on:
+      db-migrator:
+        condition: service_completed_successfully
+
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true

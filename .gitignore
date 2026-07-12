@@ -373,3 +373,6 @@ tmpclaude-*
 
 # Local development settings
 **/appsettings.Development.json
+
+# Docker secrets
+Deployment/Docker/.env

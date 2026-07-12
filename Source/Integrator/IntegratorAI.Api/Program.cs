@@ -1,6 +1,7 @@
 using IntegratorAI.BuildingBlocks.Infrastructure;
 using IntegratorAI.BuildingBlocks.Infrastructure.Caching.Redis;
 using IntegratorAI.Api.Middleware;
+using Microsoft.AspNetCore.HttpOverrides;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Infrastructure;
 using IntegratorAI.Context.Infrastructure;
@@ -24,19 +25,25 @@ builder.Services.AddContext(connectionString!);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+app.UseForwardedHeaders();
+app.UsePathBase("/integratorai/api");
+app.UseRouting();
+
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseExceptionHandler();
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
