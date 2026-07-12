@@ -29,11 +29,11 @@ builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+app.UsePathBase("/integratorai/api");
+app.UseRouting();
+
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
