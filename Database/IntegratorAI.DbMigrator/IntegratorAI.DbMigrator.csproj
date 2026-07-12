@@ -18,6 +18,9 @@
     <Content Include="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest">
       <DependentUpon>appsettings.json</DependentUpon>
     </Content>
+    <Content Include="appsettings.Production.json" CopyToOutputDirectory="PreserveNewest">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,17 @@
     </Project>
     <Project Path="Database/IntegratorAI.DbMigrator/IntegratorAI.DbMigrator.csproj" />
   </Folder>
+  <Folder Name="/Deployment/" />
+  <Folder Name="/Deployment/Docker/">
+    <File Path="Deployment/Docker/docker-compose.yml" />
+  </Folder>
+  <Folder Name="/Deployment/Docker/Dockerfiles/">
+    <File Path="Deployment/Docker/Dockerfiles/IntegratorAI.Api.Dockerfile" />
+    <File Path="Deployment/Docker/Dockerfiles/IntegratorAI.DbMigrator.Dockerfile" />
+  </Folder>
+  <Folder Name="/Deployment/Scripts/">
+    <File Path="Deployment/Scripts/resolve-config.sh" />
+  </Folder>
   <Folder Name="/Source/" />
   <Folder Name="/Source/BuildingBlocks/">
     <Project Path="Source/BuildingBlocks/IntegratorAI.BuildingBlocks.Application/IntegratorAI.BuildingBlocks.Application.csproj" Id="7864d8e3-31b9-461d-8709-e76939849aa1" />

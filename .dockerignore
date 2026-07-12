@@ -5,6 +5,7 @@
 **/*.user
 **/TestResults
 Tests/
+Database/
 .github/
 Deployment/
 README.md
