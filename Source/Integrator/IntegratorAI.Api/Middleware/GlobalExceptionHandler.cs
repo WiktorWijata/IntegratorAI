@@ -6,6 +6,13 @@ namespace IntegratorAI.Api.Middleware;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
+    private readonly ILogger<GlobalExceptionHandler> _logger;
+
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
+    {
+        _logger = logger;
+    }
+
     public async ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken cancellationToken)
     {
         var (statusCode, title) = exception switch
@@ -13,6 +20,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             NotFoundException => (StatusCodes.Status404NotFound, "Not Found"),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };
+
+        _logger.LogError(exception, "Unhandled exception: {Title} - {Message}", title, exception.Message);
 
         var problemDetails = new ProblemDetails
         {
