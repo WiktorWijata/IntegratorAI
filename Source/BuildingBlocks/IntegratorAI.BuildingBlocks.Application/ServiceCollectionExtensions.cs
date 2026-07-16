@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
             cfg.RegisterServicesFromAssemblies(assemblies);
         });
 
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
         foreach (var assembly in assemblies)

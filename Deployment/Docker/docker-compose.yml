@@ -19,6 +19,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - HF_API_KEY=${HF_API_KEY}
+      - OTEL_SERVICE_NAME=${OTEL_SERVICE_NAME}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
     volumes:
       - ./config/api.appsettings.Production.json:/app/appsettings.Production.json:ro
     networks:
