@@ -24,7 +24,7 @@ public static class SerilogExtensions
             }
             else
             {
-                configuration.WriteTo.Console(new CompactJsonFormatter());
+                configuration.WriteTo.Console(new RenderedCompactJsonFormatter());
             }
 
             if (context.Configuration.GetValue<bool>("Serilog:FileLogging"))
