@@ -8,8 +8,13 @@ using IntegratorAI.Context.Infrastructure;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Infrastructure;
 using Scalar.AspNetCore;
+using Serilog;
+using IntegratorAI.BuildingBlocks.Infrastructure.Logging;
+using IntegratorAI.BuildingBlocks.Infrastructure.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.AddSerilog();
 
 var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisCacheSettings>()
     ?? throw new InvalidOperationException("Redis configuration is missing.");
@@ -22,6 +27,8 @@ builder.Services.AddProviders(connectionString!, providersConfiguration);
 var chatSettings = builder.Configuration.GetSection("Chat").Get<ChatSettings>() ?? new ChatSettings();
 builder.Services.AddChat(connectionString!, chatSettings);
 builder.Services.AddContext(connectionString!);
+
+builder.Services.AddOpenTelemetryInstrumentation();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -37,6 +44,7 @@ builder.Services.AddProblemDetails();
 var app = builder.Build();
 
 app.UseForwardedHeaders();
+app.UseSerilogRequestLogging();
 app.UsePathBase("/integratorai/api");
 app.UseRouting();
 
