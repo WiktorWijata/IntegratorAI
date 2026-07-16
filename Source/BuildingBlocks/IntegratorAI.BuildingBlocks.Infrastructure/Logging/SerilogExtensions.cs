@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
+using Serilog.Formatting.Compact;
 
 namespace IntegratorAI.BuildingBlocks.Infrastructure.Logging;
 
@@ -23,7 +24,7 @@ public static class SerilogExtensions
             }
             else
             {
-                configuration.WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter());
+                configuration.WriteTo.Console(new CompactJsonFormatter());
             }
 
             if (context.Configuration.GetValue<bool>("Serilog:FileLogging"))
