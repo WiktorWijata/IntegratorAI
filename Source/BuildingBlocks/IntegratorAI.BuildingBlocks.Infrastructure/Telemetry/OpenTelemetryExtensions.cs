@@ -1,4 +1,3 @@
-using IntegratorAI.BuildingBlocks.Application.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Trace;
 

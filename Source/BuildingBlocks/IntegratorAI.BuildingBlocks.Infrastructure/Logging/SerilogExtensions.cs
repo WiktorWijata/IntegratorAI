@@ -15,11 +15,21 @@ public static class SerilogExtensions
                 .ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(services)
                 .Enrich.FromLogContext()
-                .Enrich.WithSpan()
-                .WriteTo.Console();
+                .Enrich.WithSpan();
+
+            if (context.HostingEnvironment.IsDevelopment())
+            {
+                configuration.WriteTo.Console();
+            }
+            else
+            {
+                configuration.WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter());
+            }
 
             if (context.Configuration.GetValue<bool>("Serilog:FileLogging"))
+            {
                 configuration.WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day);
+            }           
         });
     }
 }
