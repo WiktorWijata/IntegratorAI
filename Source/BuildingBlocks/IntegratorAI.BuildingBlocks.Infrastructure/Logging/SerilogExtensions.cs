@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
-using Serilog.Formatting.Compact;
 using Serilog.Formatting.Json;
 
 namespace IntegratorAI.BuildingBlocks.Infrastructure.Logging;
