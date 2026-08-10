@@ -376,3 +376,6 @@ tmpclaude-*
 
 # Docker secrets
 Deployment/Docker/.env
+
+# Copilot instructions (local only)
+.github/copilot-instructions.md

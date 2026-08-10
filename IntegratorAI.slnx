@@ -1,4 +1,11 @@
 <Solution>
+  <Folder Name="/.github/">
+    <File Path=".github/publish.ps1" />
+  </Folder>
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/deploy.yml" />
+    <File Path=".github/workflows/publish-nuget.yml" />
+  </Folder>
   <Folder Name="/Database/">
     <Project Path="Database/IntegratorAI.Database/IntegratorAI.Database.sqlproj" Id="b54ba1df-13ff-4300-ae4b-787ebc889269">
       <Build />
