@@ -1,4 +1,4 @@
-using IntegratorAI.BuildingBlocks.Application.Caching;
+using RescuePC.Software.Caching;
 using MediatR;
 
 namespace IntegratorAI.Context.Application.Queries;

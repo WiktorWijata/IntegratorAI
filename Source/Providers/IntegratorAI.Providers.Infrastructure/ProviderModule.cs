@@ -1,9 +1,9 @@
-﻿using IntegratorAI.BuildingBlocks.Application.Caching;
+﻿using Microsoft.Extensions.DependencyInjection;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using IntegratorAI.Providers.Domain;
 using IntegratorAI.Providers.Domain.Repositories;
-using Microsoft.Extensions.DependencyInjection;
+using RescuePC.Software.Caching;
 
 namespace IntegratorAI.Providers.Infrastructure;
 

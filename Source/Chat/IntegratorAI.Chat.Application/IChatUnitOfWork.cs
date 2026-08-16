@@ -1,4 +1,4 @@
-using IntegratorAI.BuildingBlocks.Application;
+using RescuePC.Software.EntityFrameworkCore;
 
 namespace IntegratorAI.Chat.Application;
 

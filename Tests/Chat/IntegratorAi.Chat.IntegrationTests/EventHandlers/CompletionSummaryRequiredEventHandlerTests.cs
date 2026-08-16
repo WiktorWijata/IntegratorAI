@@ -2,10 +2,8 @@ using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Application.EventHandlers;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Events;
-using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace IntegratorAI.Chat.IntegrationTests.EventHandlers;

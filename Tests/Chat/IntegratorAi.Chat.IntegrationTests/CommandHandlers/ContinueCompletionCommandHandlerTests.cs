@@ -1,4 +1,3 @@
-using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Application.CommandHandlers;
 using IntegratorAI.Chat.Application.Commands;
@@ -9,6 +8,7 @@ using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using RescuePC.Software.Domain.Exceptions;
 
 namespace IntegratorAI.Chat.IntegrationTests.CommandHandlers;
 

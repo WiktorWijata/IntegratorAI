@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using IntegratorAI.Providers.Domain.Repositories;
 using IntegratorAI.Providers.Persistence.Reposiitories;
+using RescuePC.Software.EntityFrameworkCore;
 
 namespace IntegratorAI.Providers.Persistence;
 
@@ -9,11 +9,9 @@ public static class ServiceCollectionExtensions
 {
     public static void AddEntityFramework(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<ProvidersDbContext>(options =>
+        services.AddEntityFramework<ProvidersDbContext>(connectionString, repositories: repos =>
         {
-            options.UseSqlServer(connectionString);
+            repos.AddScoped<IProviderRepository, ProviderRepository>();
         });
-
-        services.AddScoped<IProviderRepository, ProviderRepository>();
     }
 }

@@ -1,4 +1,4 @@
-﻿using IntegratorAI.BuildingBlocks.Domain;
+﻿using RescuePC.Software.Domain;
 
 namespace IntegratorAI.Context.Domain;
 

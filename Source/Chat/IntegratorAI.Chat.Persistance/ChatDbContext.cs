@@ -1,4 +1,3 @@
-using IntegratorAI.BuildingBlocks.Persistence;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Persistence.Configuration;

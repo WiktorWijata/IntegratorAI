@@ -1,7 +1,7 @@
-﻿using IntegratorAI.BuildingBlocks.Domain;
-using IntegratorAI.Context.Application.PromptBuilder;
+﻿using IntegratorAI.Context.Application.PromptBuilder;
 using IntegratorAI.Context.Application.Queries;
 using IntegratorAI.Context.Domain.Repositories;
+using RescuePC.Software.Domain.Exceptions;
 using MediatR;
 
 namespace IntegratorAI.Context.Application.QueryHandlers;

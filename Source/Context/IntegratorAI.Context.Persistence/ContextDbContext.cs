@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using IntegratorAI.BuildingBlocks.Persistence;
 using IntegratorAI.Context.Persistence.Configuration;
 
 namespace IntegratorAI.Context.Persistence;
