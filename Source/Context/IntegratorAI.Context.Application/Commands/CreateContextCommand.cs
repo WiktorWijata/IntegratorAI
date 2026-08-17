@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using IntegratorAI.Context.Contracts.Models;
 using MediatR;
 

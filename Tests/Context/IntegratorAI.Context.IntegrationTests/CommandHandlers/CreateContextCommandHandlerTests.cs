@@ -1,10 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using IntegratorAI.Context.Application.CommandHandlers;
 using IntegratorAI.Context.Application.Commands;
 using IntegratorAI.Context.Contracts.Models;
-using IntegratorAI.Context.Domain;
 using IntegratorAI.Context.Persistence;
 using IntegratorAI.Context.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace IntegratorAI.Context.IntegrationTests.CommandHandlers;
 

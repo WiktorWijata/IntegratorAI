@@ -1,6 +1,6 @@
-using IntegratorAI.BuildingBlocks.Domain;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using RescuePC.Software.Domain.Exceptions;
 
 namespace IntegratorAI.Api.Middleware;
 

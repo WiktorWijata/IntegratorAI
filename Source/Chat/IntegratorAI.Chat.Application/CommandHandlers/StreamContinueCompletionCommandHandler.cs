@@ -5,6 +5,7 @@ using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
+using RescuePC.Software.Domain.Exceptions;
 using MediatR;
 
 namespace IntegratorAI.Chat.Application.CommandHandlers;
@@ -25,7 +26,7 @@ public class StreamContinueCompletionCommandHandler : IStreamRequestHandler<Stre
     public async IAsyncEnumerable<string> Handle(StreamContinueCompletionCommand request, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var completion = await _completionRepository.GetByIdAsync(request.CompletionId, cancellationToken)
-            ?? throw new InvalidOperationException($"Completion with id '{request.CompletionId}' was not found.");
+            ?? throw new NotFoundException(nameof(Completion), request.CompletionId);
 
         completion.AddMessage(new Message(MessageRole.User, request.Prompt));
 

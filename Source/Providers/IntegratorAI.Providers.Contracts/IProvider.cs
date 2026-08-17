@@ -1,7 +1,7 @@
-﻿using IntegratorAI.Providers.Contracts.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using IntegratorAI.Providers.Contracts.Models;
 
 namespace IntegratorAI.Providers.Contracts
 {

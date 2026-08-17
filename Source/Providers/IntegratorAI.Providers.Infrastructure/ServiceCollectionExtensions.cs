@@ -1,12 +1,11 @@
 ﻿using System.Net.Http.Headers;
-using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Domain;
 using IntegratorAI.Providers.Infrastructure.HuggingFace;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Api;
 using IntegratorAI.Providers.Persistence;
-using Refit;
+using RescuePC.Software.Refit;
 
 namespace IntegratorAI.Providers.Infrastructure;
 
@@ -17,16 +16,9 @@ public static class ServiceCollectionExtensions
         var huggingFaceConfig = providersConfiguration.SingleOrDefault(p => p.Type == ProviderType.HuggingFace);
         if (huggingFaceConfig != null)
         {
-            var refitSettings = new RefitSettings
-            {
-                ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                })
-            };
-
-            services.AddRefitClient<IHuggingFaceApi>(refitSettings)
-                .ConfigureHttpClient(c =>
+            services.AddRefitClient<IHuggingFaceApi>(
+                clientName: ProviderType.HuggingFace.ToString(),
+                client: c =>
                 {
                     c.BaseAddress = new Uri(huggingFaceConfig.BaseUrl);
                     c.DefaultRequestHeaders.Authorization =

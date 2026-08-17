@@ -1,5 +1,3 @@
-using System;
-
 namespace IntegratorAI.Context.Application;
 
 internal static class CacheKeys

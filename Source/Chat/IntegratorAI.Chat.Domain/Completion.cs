@@ -1,6 +1,6 @@
-using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Chat.Domain.Events;
 using IntegratorAI.Chat.Domain.ValueObjects;
+using RescuePC.Software.Domain;
 
 namespace IntegratorAI.Chat.Domain;
 

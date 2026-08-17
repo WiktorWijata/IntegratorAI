@@ -1,16 +1,15 @@
-using IntegratorAI.BuildingBlocks.Infrastructure;
-using IntegratorAI.BuildingBlocks.Infrastructure.Caching.Redis;
-using IntegratorAI.Api.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
+using IntegratorAI.Api.Middleware;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Infrastructure;
 using IntegratorAI.Context.Infrastructure;
-using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Infrastructure;
+using RescuePC.Software.Caching;
+using RescuePC.Software.Caching.Providers.Redis;
+using RescuePC.Software.Logging.Providers.Serilog;
+using RescuePC.Software.Telemetry;
 using Scalar.AspNetCore;
 using Serilog;
-using IntegratorAI.BuildingBlocks.Infrastructure.Logging;
-using IntegratorAI.BuildingBlocks.Infrastructure.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +17,7 @@ builder.Host.AddSerilog();
 
 var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisCacheSettings>()
     ?? throw new InvalidOperationException("Redis configuration is missing.");
-builder.Services.UseRedisAsDefaultCacheProvider(redisSettings);
+builder.Services.AddRedisAsDefaultCacheProvider(redisSettings);
 
 var connectionString = builder.Configuration.GetConnectionString("IntegratorAI");
 var providersConfiguration = builder.Configuration.GetSection("Providers").Get<List<ProviderConfiguration>>() ?? [];
@@ -27,7 +26,6 @@ builder.Services.AddProviders(connectionString!, providersConfiguration);
 var chatSettings = builder.Configuration.GetSection("Chat").Get<ChatSettings>() ?? new ChatSettings();
 builder.Services.AddChat(connectionString!, chatSettings);
 builder.Services.AddContext(connectionString!);
-
 builder.Services.AddOpenTelemetryInstrumentation();
 
 builder.Services.AddControllers();

@@ -36,7 +36,6 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
         var request = completion.ToRequest(PrimaryModel, stream: true);
 
         using var response = await _huggingFaceApi.StreamChatAsync(request);
-        response.EnsureSuccessStatusCode();
 
         using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         using var reader = new StreamReader(stream);
@@ -76,7 +75,11 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
         {
             var response = await _huggingFaceApi.PipelineAsync<SummarizationResponse[]>(
                 modelId: SummarizationModel,
-                request: new PipelineRequest { Inputs = input }
+                request: new PipelineRequest
+                {
+                    Inputs = input,
+                    Parameters = new PipelineParameters { Truncation = true }
+                }
             );
 
             var summary = response.SingleOrDefault()?.SummaryText

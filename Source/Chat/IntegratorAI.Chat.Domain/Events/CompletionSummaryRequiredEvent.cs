@@ -1,4 +1,4 @@
-using IntegratorAI.BuildingBlocks.Domain.Event;
+using RescuePC.Software.Domain.Event;
 
 namespace IntegratorAI.Chat.Domain.Events;
 

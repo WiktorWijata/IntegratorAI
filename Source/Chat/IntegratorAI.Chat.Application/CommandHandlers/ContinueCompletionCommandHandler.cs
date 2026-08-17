@@ -1,10 +1,10 @@
-using IntegratorAI.BuildingBlocks.Domain;
 using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Contracts.Models;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
+using RescuePC.Software.Domain.Exceptions;
 using MediatR;
 
 namespace IntegratorAI.Chat.Application.CommandHandlers;

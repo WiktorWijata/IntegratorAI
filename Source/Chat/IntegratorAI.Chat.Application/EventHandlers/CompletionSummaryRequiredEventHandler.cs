@@ -1,7 +1,7 @@
-﻿using IntegratorAI.BuildingBlocks.Domain.Event;
-using IntegratorAI.Chat.Domain.Events;
+﻿using IntegratorAI.Chat.Domain.Events;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
+using RescuePC.Software.Domain.Event;
 
 namespace IntegratorAI.Chat.Application.EventHandlers;
 

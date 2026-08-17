@@ -1,5 +1,4 @@
-﻿﻿using IntegratorAI.BuildingBlocks.Persistence;
-using IntegratorAI.Providers.Domain;
+﻿using IntegratorAI.Providers.Domain;
 using IntegratorAI.Providers.Persistence.Configuration;
 
 using Microsoft.EntityFrameworkCore;

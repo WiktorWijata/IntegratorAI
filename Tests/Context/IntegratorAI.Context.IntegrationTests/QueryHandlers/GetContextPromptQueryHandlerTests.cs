@@ -1,11 +1,9 @@
-using IntegratorAI.BuildingBlocks.Domain;
-using IntegratorAI.Context.Application.PromptBuilder;
+using Microsoft.EntityFrameworkCore;
 using IntegratorAI.Context.Application.Queries;
 using IntegratorAI.Context.Application.QueryHandlers;
-using IntegratorAI.Context.Domain;
 using IntegratorAI.Context.Persistence;
 using IntegratorAI.Context.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
+using RescuePC.Software.Domain.Exceptions;
 
 namespace IntegratorAI.Context.IntegrationTests.QueryHandlers;
 

@@ -1,7 +1,7 @@
-﻿using IntegratorAI.BuildingBlocks.Persistence;
-using IntegratorAI.Context.Domain.Repositories;
+﻿using IntegratorAI.Context.Domain.Repositories;
 using IntegratorAI.Context.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using RescuePC.Software.EntityFrameworkCore;
 
 namespace IntegratorAI.Context.Persistence;
 
