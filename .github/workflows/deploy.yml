@@ -30,6 +30,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Provide NuGet.Config with private feed credentials for the Docker build context
+        env:
+          GH_PACKAGES_USERNAME: ${{ github.actor }}
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: |
+          for dir in Source Database; do
+            cp NuGet.Config "$dir/NuGet.Config"
+            dotnet nuget update source RescuePC-GitHub \
+              --configfile "$dir/NuGet.Config" \
+              --username "$GH_PACKAGES_USERNAME" \
+              --password "$GH_PACKAGES_TOKEN" \
+              --store-password-in-clear-text
+          done
+
       - name: Build and push DbMigrator
         uses: docker/build-push-action@v5
         with:
