@@ -7,7 +7,7 @@ using RescuePC.Software.EntityFrameworkCore.Domain.Interceptors;
 using RescuePC.Software.EntityFrameworkCore.Domain;
 
 namespace IntegratorAI.Chat.Persistence;
-
+ 
 public static class ServiceCollectionExtensions
 {
     public static void AddEntityFramework(this IServiceCollection services, string connectionString)
