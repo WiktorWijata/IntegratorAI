@@ -1,6 +1,6 @@
 ﻿using IntegratorAI.Providers.Domain;
 
-namespace IntegratorAI.Providers.Contracts
+namespace IntegratorAI.Providers.Infrastructure
 {
     public class ProviderConfiguration
     {

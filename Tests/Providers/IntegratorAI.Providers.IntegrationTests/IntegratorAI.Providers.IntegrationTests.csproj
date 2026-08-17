@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -27,7 +27,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Source\Providers\IntegratorAI.Providers.Domain\IntegratorAI.Providers.Domain.csproj" />
-        <ProjectReference Include="..\..\..\Source\Providers\IntegratorAI.Providers.Persistance\IntegratorAI.Providers.Persistence.csproj" />
+        <ProjectReference Include="..\..\..\Source\Providers\IntegratorAI.Providers.Persistence\IntegratorAI.Providers.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>

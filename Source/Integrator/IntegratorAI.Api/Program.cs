@@ -3,7 +3,6 @@ using IntegratorAI.Api.Middleware;
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Infrastructure;
 using IntegratorAI.Context.Infrastructure;
-using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Infrastructure;
 using RescuePC.Software.Caching;
 using RescuePC.Software.Caching.Providers.Redis;

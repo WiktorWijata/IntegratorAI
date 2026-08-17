@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -10,7 +10,7 @@
     <ProjectReference Include="..\..\BuildingBlocks\IntegratorAI.BuildingBlocks.Infrastructure\IntegratorAI.BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\IntegratorAI.Chat.Application\IntegratorAI.Chat.Application.csproj" />
     <ProjectReference Include="..\IntegratorAI.Chat.Contracts\IntegratorAI.Chat.Contracts.csproj" />
-    <ProjectReference Include="..\IntegratorAI.Chat.Persistance\IntegratorAI.Chat.Persistence.csproj" />
+    <ProjectReference Include="..\IntegratorAI.Chat.Persistence\IntegratorAI.Chat.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

@@ -33,7 +33,7 @@
         <ProjectReference Include="..\..\..\Source\Chat\IntegratorAI.Chat.Application\IntegratorAI.Chat.Application.csproj" />
         <ProjectReference Include="..\..\..\Source\Chat\IntegratorAI.Chat.Contracts\IntegratorAI.Chat.Contracts.csproj" />
         <ProjectReference Include="..\..\..\Source\Chat\IntegratorAI.Chat.Domain\IntegratorAI.Chat.Domain.csproj" />
-        <ProjectReference Include="..\..\..\Source\Chat\IntegratorAI.Chat.Persistance\IntegratorAI.Chat.Persistence.csproj" />
+        <ProjectReference Include="..\..\..\Source\Chat\IntegratorAI.Chat.Persistence\IntegratorAI.Chat.Persistence.csproj" />
         <ProjectReference Include="..\..\..\Source\Providers\IntegratorAI.Providers.Contracts\IntegratorAI.Providers.Contracts.csproj" />
     </ItemGroup>
 

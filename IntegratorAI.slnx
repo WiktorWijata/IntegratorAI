@@ -36,7 +36,7 @@
     <Project Path="Source/Chat/IntegratorAI.Chat.Contracts/IntegratorAI.Chat.Contracts.csproj" Id="f179d3f7-4a8b-425e-84c6-04bc22c7df3d" />
     <Project Path="Source/Chat/IntegratorAI.Chat.Domain/IntegratorAI.Chat.Domain.csproj" Id="0e6f5687-3026-4f12-85a2-08e2bc192102" />
     <Project Path="Source/Chat/IntegratorAI.Chat.Infrastructure/IntegratorAI.Chat.Infrastructure.csproj" Id="36fcad67-51ad-4777-b3b2-21a6f383ee7e" />
-    <Project Path="Source/Chat/IntegratorAI.Chat.Persistance/IntegratorAI.Chat.Persistence.csproj" Id="7a39ed66-16cf-413a-bf87-8b134dbc8f11" />
+    <Project Path="Source/Chat/IntegratorAI.Chat.Persistence/IntegratorAI.Chat.Persistence.csproj" Id="7a39ed66-16cf-413a-bf87-8b134dbc8f11" />
   </Folder>
   <Folder Name="/Source/Context/">
     <Project Path="Source/Context/IntegratorAI.Context.Application/IntegratorAI.Context.Application.csproj" Id="721f4425-991e-4af9-a5e5-87018516cb99" />
@@ -53,7 +53,7 @@
     <Project Path="Source/Providers/IntegratorAI.Providers.Contracts/IntegratorAI.Providers.Contracts.csproj" Id="ea8f21ed-ffa4-409d-8fdc-b851c57a22ad" />
     <Project Path="Source/Providers/IntegratorAI.Providers.Domain/IntegratorAI.Providers.Domain.csproj" Id="8a7de9ef-fe9e-4ec0-8de2-3f65f00fffc8" />
     <Project Path="Source/Providers/IntegratorAI.Providers.Infrastructure/IntegratorAI.Providers.Infrastructure.csproj" Id="04fbe009-ac04-4747-a9f7-561eeec2142b" />
-    <Project Path="Source/Providers/IntegratorAI.Providers.Persistance/IntegratorAI.Providers.Persistence.csproj" Id="78d9b996-de96-41f4-9a0a-928cc4583855" />
+    <Project Path="Source/Providers/IntegratorAI.Providers.Persistence/IntegratorAI.Providers.Persistence.csproj" Id="78d9b996-de96-41f4-9a0a-928cc4583855" />
   </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Chat/">
