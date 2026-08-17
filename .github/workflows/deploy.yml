@@ -36,9 +36,9 @@ jobs:
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
         run: |
           for dir in Source Database; do
-            cp NuGet.Config "$dir/NuGet.Config"
+            cp nuget.config "$dir/nuget.config"
             dotnet nuget update source RescuePC-GitHub \
-              --configfile "$dir/NuGet.Config" \
+              --configfile "$dir/nuget.config" \
               --username "$GH_PACKAGES_USERNAME" \
               --password "$GH_PACKAGES_TOKEN" \
               --store-password-in-clear-text
