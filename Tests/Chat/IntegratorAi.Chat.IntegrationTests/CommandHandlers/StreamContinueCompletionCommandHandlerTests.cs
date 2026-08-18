@@ -9,6 +9,7 @@ using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using RescuePC.Software.Domain.Exceptions;
 
 namespace IntegratorAI.Chat.IntegrationTests.CommandHandlers;
 
@@ -68,7 +69,7 @@ public class StreamContinueCompletionCommandHandlerTests : IDisposable
     {
         var command = new StreamContinueCompletionCommand(Guid.NewGuid(), "follow up");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             await foreach (var _ in _handler.Handle(command, CancellationToken.None)) { }
         });
