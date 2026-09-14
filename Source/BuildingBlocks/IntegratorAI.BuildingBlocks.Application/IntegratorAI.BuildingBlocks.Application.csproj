@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RescuePC.Software.Caching" Version="10.1.0" />
+    <PackageReference Include="RescuePC.Software.EntityFrameworkCore.MediatR" Version="10.0.0" />
+    <PackageReference Include="RescuePC.Software.Logging" Version="10.0.0" />
+  </ItemGroup>
+
+</Project>

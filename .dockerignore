@@ -1,0 +1,10 @@
+**/.vs
+**/.vscode
+**/obj
+**/bin
+**/*.user
+**/TestResults
+Tests/
+.github/
+Deployment/
+README.md

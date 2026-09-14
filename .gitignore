@@ -365,3 +365,17 @@ FodyWeavers.xsd
 **/ClientApp/build/
 # AI context files (local only)
 Deployment/ai_todo_summary.md
+/nul
+/.vscode
+
+# Claude AI temp directories
+tmpclaude-*
+
+# Local development settings
+**/appsettings.Development.json
+
+# Docker secrets
+Deployment/Docker/.env
+
+# Copilot instructions (local only)
+.github/copilot-instructions.md

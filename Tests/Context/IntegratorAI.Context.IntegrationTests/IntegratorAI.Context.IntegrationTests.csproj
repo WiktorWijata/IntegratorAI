@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <!-- SQLitePCLRaw.lib.e_sqlite3 2.1.11 has GHSA-2m69-gcr7-jv3q vulnerability.
+             No fix available yet from the package author. Suppressed as this is a test-only project.
+             Track: https://github.com/advisories/GHSA-2m69-gcr7-jv3q -->
+        <NuGetAuditSuppress>https://github.com/advisories/GHSA-2m69-gcr7-jv3q</NuGetAuditSuppress>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="10.0.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
+        <PackageReference Include="NSubstitute" Version="6.0.0" />
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Source\BuildingBlocks\IntegratorAI.BuildingBlocks.Application\IntegratorAI.BuildingBlocks.Application.csproj" />
+        <ProjectReference Include="..\..\..\Source\BuildingBlocks\IntegratorAI.BuildingBlocks.Domain\IntegratorAI.BuildingBlocks.Domain.csproj" />
+        <ProjectReference Include="..\..\..\Source\BuildingBlocks\IntegratorAI.BuildingBlocks.Persistence\IntegratorAI.BuildingBlocks.Persistence.csproj" />
+        <ProjectReference Include="..\..\..\Source\Context\IntegratorAI.Context.Application\IntegratorAI.Context.Application.csproj" />
+        <ProjectReference Include="..\..\..\Source\Context\IntegratorAI.Context.Domain\IntegratorAI.Context.Domain.csproj" />
+        <ProjectReference Include="..\..\..\Source\Context\IntegratorAI.Context.Persistence\IntegratorAI.Context.Persistence.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+</Project>

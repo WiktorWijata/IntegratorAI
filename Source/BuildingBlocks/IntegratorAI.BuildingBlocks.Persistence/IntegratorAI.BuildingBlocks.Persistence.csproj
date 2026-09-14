@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RescuePC.Software.EntityFrameworkCore.Domain" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IntegratorAI.BuildingBlocks.Application\IntegratorAI.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\IntegratorAI.BuildingBlocks.Domain\IntegratorAI.BuildingBlocks.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
