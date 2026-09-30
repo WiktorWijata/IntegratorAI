@@ -15,6 +15,7 @@ namespace IntegratorAI.Api.Contracts.Chat
         /// <summary>
         /// Creates a new streaming completion from the provided prompt.
         /// Optionally applies a previously created context via the <c>Context-Id</c> header.
+        /// The identifier of the new completion is returned in the <c>Completion-Id</c> response header.
         /// </summary>
         [Post("/streamchat/completions")]
         Task<HttpResponseMessage> CreateCompletion([Body] CompletionRequest request, [Header("Context-Id")] Guid? contextId = null, CancellationToken cancellationToken = default);

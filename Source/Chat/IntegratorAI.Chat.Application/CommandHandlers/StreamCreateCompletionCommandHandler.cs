@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using IntegratorAI.Chat.Application.Commands;
+using IntegratorAI.Chat.Contracts.Models;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Context.Contracts;
@@ -10,7 +11,7 @@ using MediatR;
 
 namespace IntegratorAI.Chat.Application.CommandHandlers;
 
-public class StreamCreateCompletionCommandHandler : IStreamRequestHandler<StreamCreateCompletionCommand, string>
+public class StreamCreateCompletionCommandHandler : IStreamRequestHandler<StreamCreateCompletionCommand, CompletionStreamEvent>
 {
     private readonly IProviderModule _providerModule;
     private readonly IContextModule _contextModule;
@@ -26,7 +27,7 @@ public class StreamCreateCompletionCommandHandler : IStreamRequestHandler<Stream
         _completionRepository = completionRepository;
     }
 
-    public async IAsyncEnumerable<string> Handle(StreamCreateCompletionCommand request, [EnumeratorCancellation] CancellationToken cancellationToken)
+    public async IAsyncEnumerable<CompletionStreamEvent> Handle(StreamCreateCompletionCommand request, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         Message? systemMessage = null;
         if (request.ContextId.HasValue)
@@ -42,6 +43,8 @@ public class StreamCreateCompletionCommandHandler : IStreamRequestHandler<Stream
 
         await _completionRepository.AddAsync(completion, cancellationToken);
 
+        yield return CompletionStreamEvent.ForCompletion(completion.Id);
+
         var completionDto = new ProviderCompletionDto
         {
             Messages = completion.ContextMessages.Select(m => new ProviderMessageDto
@@ -56,7 +59,7 @@ public class StreamCreateCompletionCommandHandler : IStreamRequestHandler<Stream
         await foreach (var token in _providerModule.StreamCompletionAsync(completionDto, cancellationToken))
         {
             fullResponse.Append(token);
-            yield return token;
+            yield return CompletionStreamEvent.ForToken(token);
         }
 
         completion.AddMessage(new Message(
