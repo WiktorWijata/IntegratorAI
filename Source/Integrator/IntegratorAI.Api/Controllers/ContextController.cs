@@ -40,4 +40,32 @@ public class ContextController(IContextModule contextModule) : ControllerBase
         );
         return Ok(contextId);
     }
+
+    /// <summary>
+    /// Replaces the configuration of an existing context, including its tools and examples.
+    /// Conversations that were already started keep the prompt they were created with;
+    /// only completions created after the update use the new configuration.
+    /// </summary>
+    /// <param name="id">Unique identifier of the context to update.</param>
+    /// <param name="contextRequest">Request body describing the new context configuration.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] ContextRequest contextRequest, CancellationToken cancellationToken = default)
+    {
+        await _contextModule.UpdateContext(
+            contextId: id,
+            name: contextRequest.Name,
+            systemRole: contextRequest.SystemRole,
+            domainContext: contextRequest.DomainContext,
+            decisionPolicy: contextRequest.DecisionPolicy,
+            operatingRules: contextRequest.OperatingRules,
+            outputFormat: contextRequest.OutputFormat,
+            tools: contextRequest.Tools?.Select(t => t.ToDto()),
+            examples: contextRequest.Examples?.Select(e => e.ToDto()),
+            cancellationToken: cancellationToken
+        );
+        return NoContent();
+    }
 }
