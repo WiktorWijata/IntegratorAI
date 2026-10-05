@@ -21,7 +21,7 @@ public class ChatModule : IChatModule
     public Task<CompletionDto> ContinueCompletion(Guid completionId, string prompt, CancellationToken cancellationToken = default)
         => _mediator.Send(new ContinueCompletionCommand(completionId, prompt), cancellationToken);
 
-    public IAsyncEnumerable<string> StreamCreateCompletion(string prompt, Guid? contextId, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<CompletionStreamEvent> StreamCreateCompletion(string prompt, Guid? contextId, CancellationToken cancellationToken = default)
         => _mediator.CreateStream(new StreamCreateCompletionCommand(prompt, contextId), cancellationToken);
 
     public IAsyncEnumerable<string> StreamContinueCompletion(Guid completionId, string prompt, CancellationToken cancellationToken = default)

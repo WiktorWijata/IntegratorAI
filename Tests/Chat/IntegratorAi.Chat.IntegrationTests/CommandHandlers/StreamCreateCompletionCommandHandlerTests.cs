@@ -1,6 +1,7 @@
 using IntegratorAI.Chat.Application;
 using IntegratorAI.Chat.Application.CommandHandlers;
 using IntegratorAI.Chat.Application.Commands;
+using IntegratorAI.Chat.Contracts.Models;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Persistence;
 using IntegratorAI.Chat.Persistence.Repositories;
@@ -57,10 +58,30 @@ public class StreamCreateCompletionCommandHandlerTests : IDisposable
             .Returns(StreamTokens("Hello", " world", "!"));
 
         var tokens = new List<string>();
-        await foreach (var token in _handler.Handle(new StreamCreateCompletionCommand("Hi"), CancellationToken.None))
-            tokens.Add(token);
+        await foreach (var item in _handler.Handle(new StreamCreateCompletionCommand("Hi"), CancellationToken.None))
+        {
+            if (item.Type == CompletionStreamEventType.Token)
+                tokens.Add(item.Data);
+        }
 
         Assert.Equal(["Hello", " world", "!"], tokens);
+    }
+
+    [Fact]
+    public async Task Handle_YieldsCompletionIdFirst_BeforeTokens()
+    {
+        _providerModule
+            .StreamCompletionAsync(Arg.Any<ProviderCompletionDto>(), Arg.Any<CancellationToken>())
+            .Returns(StreamTokens("Hello"));
+
+        var events = new List<CompletionStreamEvent>();
+        await foreach (var item in _handler.Handle(new StreamCreateCompletionCommand("Hi"), CancellationToken.None))
+            events.Add(item);
+
+        var completionId = _context.ChangeTracker.Entries<Completion>().Single().Entity.Id;
+        Assert.Equal(CompletionStreamEventType.Completion, events[0].Type);
+        Assert.Equal(completionId.ToString(), events[0].Data);
+        Assert.All(events.Skip(1), e => Assert.Equal(CompletionStreamEventType.Token, e.Type));
     }
 
     [Fact]

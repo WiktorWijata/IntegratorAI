@@ -16,5 +16,12 @@ namespace IntegratorAI.Api.Contracts.Context
         /// </summary>
         [Post("/context")]
         Task<Guid> CreateContext([Body] ContextRequest request, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Replaces the configuration of an existing context, including its tools and examples.
+        /// Conversations that were already started keep the prompt they were created with.
+        /// </summary>
+        [Put("/context/{id}")]
+        Task UpdateContext(Guid id, [Body] ContextRequest request, CancellationToken cancellationToken = default);
     }
 }

@@ -18,6 +18,9 @@ public class ContextModule : IContextModule
     public Task<Guid> CreateContext(string name, string systemRole, string domainContext, string decisionPolicy, string operatingRules, string outputFormat, IEnumerable<ToolDto> tools = null, IEnumerable<ExampleDto> examples = null, CancellationToken cancellationToken = default)
         => _mediator.Send(new CreateContextCommand(name, systemRole, domainContext, decisionPolicy, operatingRules, outputFormat, tools, examples), cancellationToken);
 
+    public Task UpdateContext(Guid contextId, string name, string systemRole, string domainContext, string decisionPolicy, string operatingRules, string outputFormat, IEnumerable<ToolDto> tools = null, IEnumerable<ExampleDto> examples = null, CancellationToken cancellationToken = default)
+        => _mediator.Send(new UpdateContextCommand(contextId, name, systemRole, domainContext, decisionPolicy, operatingRules, outputFormat, tools, examples), cancellationToken);
+
     public Task<string> GetContextPrompt(Guid contextId, CancellationToken cancellationToken = default)
         => _mediator.Send(new GetContextPromptQuery(contextId), cancellationToken);
 }

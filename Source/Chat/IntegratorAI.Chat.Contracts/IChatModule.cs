@@ -10,7 +10,7 @@ namespace IntegratorAI.Chat.Contracts
     {
         Task<CompletionDto> CreateCompletion(string prompt, Guid? contextId, CancellationToken cancellationToken = default);
         Task<CompletionDto> ContinueCompletion(Guid completionId, string prompt, CancellationToken cancellationToken = default);
-        IAsyncEnumerable<string> StreamCreateCompletion(string prompt, Guid? contextId, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<CompletionStreamEvent> StreamCreateCompletion(string prompt, Guid? contextId, CancellationToken cancellationToken = default);
         IAsyncEnumerable<string> StreamContinueCompletion(Guid completionId, string prompt, CancellationToken cancellationToken = default);
         Task<CompletionDto> GetCompletion(Guid completionId, CancellationToken cancellationToken = default);
     }

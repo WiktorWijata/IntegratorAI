@@ -23,23 +23,8 @@ public class CreateContextCommandHandler : IRequestHandler<CreateContextCommand,
             decisionPolicy: request.DecisionPolicy,
             operatingRules: request.OperatingRules,
             outputFormat: request.OutputFormat,
-            tools: request.Tools?.Select(t => new Tool(
-                name: t.Name,
-                description: t.Description,
-                parameters: t.Parameters?.Select(p => new ToolParameter
-                {
-                    Name = p.Name,
-                    Type = p.Type,
-                    Description = p.Description
-                }).ToList(),
-                guardrails: t.Guardrails?.Select(g => new Guardrail(
-                    description: g.Description,
-                    requiresConfirmation: g.RequiresConfirmation)).ToList()
-            )).ToList(),
-            examples: request.Examples?.Select(e => new Example(
-                input: e.Input,
-                expectedResponse: e.ExpectedResponse
-            )).ToList());
+            tools: ContextEntityFactory.CreateTools(request.Tools),
+            examples: ContextEntityFactory.CreateExamples(request.Examples));
 
         await _contextRepository.AddAsync(context, cancellationToken);
         return context.Id;

@@ -58,6 +58,42 @@ public class Context : AggregateRoot<Guid>
         Examples = new HashSet<Example>();
     }
 
+    public void Update(
+        string name,
+        string systemRole,
+        string? domainContext,
+        string? decisionPolicy,
+        string? operatingRules,
+        string? outputFormat,
+        ICollection<Tool>? tools,
+        ICollection<Example>? examples)
+    {
+        Name = name;
+        SystemRole = systemRole;
+        DomainContext = domainContext;
+        DecisionPolicy = decisionPolicy;
+        OperatingRules = operatingRules;
+        OutputFormat = outputFormat;
+
+        Tools.Clear();
+        if (tools is not null)
+        {
+            foreach (var tool in tools)
+            {
+                AddTool(tool);
+            }
+        }
+
+        Examples.Clear();
+        if (examples is not null)
+        {
+            foreach (var example in examples)
+            {
+                Examples.Add(example);
+            }
+        }
+    }
+
     public void AddTool(Tool tool)
     {
         if (Tools.Any(t => t.Name == tool.Name))
