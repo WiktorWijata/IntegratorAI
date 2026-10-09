@@ -64,6 +64,9 @@
     <Project Path="Tests/Context/IntegratorAI.Context.IntegrationTests/IntegratorAI.Context.IntegrationTests.csproj" />
     <Project Path="Tests/Context/IntegratorAI.Context.UnitTests/IntegratorAI.Context.UnitTests.csproj" />
   </Folder>
+  <Folder Name="/Tests/Integrator/">
+    <Project Path="Tests/Integrator/IntegratorAI.Api.UnitTests/IntegratorAI.Api.UnitTests.csproj" />
+  </Folder>
   <Folder Name="/Tests/Providers/">
     <Project Path="Tests/Providers/IntegratorAI.Providers.IntegrationTests/IntegratorAI.Providers.IntegrationTests.csproj" />
     <Project Path="Tests/Providers/IntegratorAI.Providers.UnitTests/IntegratorAI.Providers.UnitTests.csproj" Id="4d3db3bb-8b44-4e10-be5f-56445a54a07c" />

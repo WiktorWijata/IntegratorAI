@@ -36,11 +36,22 @@ public class SseResult : IActionResult
                 continue;
             }
 
-            await response.WriteAsync($"data: {item.Data}\n\n", cancellationToken);
+            await response.WriteAsync(Frame(item.Data), cancellationToken);
             await response.Body.FlushAsync(cancellationToken);
         }
 
         await response.WriteAsync("data: [DONE]\n\n", cancellationToken);
         await response.Body.FlushAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// One Server-Sent Event. A token that contains a line break has to be split into several <c>data:</c> lines:
+    /// a client joins them back with "\n", whereas a bare line break would end the event and drop the rest of the token.
+    /// </summary>
+    public static string Frame(string data)
+    {
+        var lines = data.Replace("\r\n", "\n").Split('\n');
+
+        return string.Concat(lines.Select(line => $"data: {line}\n")) + "\n";
     }
 }
