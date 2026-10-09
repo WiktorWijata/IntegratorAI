@@ -1,4 +1,5 @@
-﻿using IntegratorAI.Providers.Contracts;
+﻿using IntegratorAI.BuildingBlocks.Application;
+using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using IntegratorAI.Providers.Infrastructure.Consts;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Api;
@@ -25,7 +26,7 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
     public async Task<ProviderMessageDto> CompletionAsync(ProviderCompletionDto completion)
     {
         var request = completion.ToRequest(PrimaryModel);
-        var response = await _huggingFaceApi.ChatAsync(request);
+        var response = await CallAsync(() => _huggingFaceApi.ChatAsync(request));
         var choice = response.Choices?.FirstOrDefault()
             ?? throw new InvalidOperationException("Provider returned no choices.");
         return choice.ToMessageDto();
@@ -35,7 +36,11 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
     {
         var request = completion.ToRequest(PrimaryModel, stream: true);
 
-        using var response = await _huggingFaceApi.StreamChatAsync(request);
+        using var response = await CallAsync(() => _huggingFaceApi.StreamChatAsync(request));
+
+        // The call returns the raw response, so a rejected request (no credit, bad key, ...) would otherwise
+        // read as an empty stream and the caller would get an answer with no text and no error.
+        await EnsureSuccessAsync(response, cancellationToken);
 
         using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         using var reader = new StreamReader(stream);
@@ -73,14 +78,14 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
 
         if (!string.IsNullOrEmpty(SummarizationModel))
         {
-            var response = await _huggingFaceApi.PipelineAsync<SummarizationResponse[]>(
+            var response = await CallAsync(() => _huggingFaceApi.PipelineAsync<SummarizationResponse[]>(
                 modelId: SummarizationModel,
                 request: new PipelineRequest
                 {
                     Inputs = input,
                     Parameters = new PipelineParameters { Truncation = true }
                 }
-            );
+            ));
 
             var summary = response.SingleOrDefault()?.SummaryText
                 ?? throw new InvalidOperationException("Summarization pipeline returned no result.");
@@ -105,10 +110,43 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
         };
 
         var chatRequest = summaryCompletion.ToRequest(PrimaryModel);
-        var chatResponse = await _huggingFaceApi.ChatAsync(chatRequest);
+        var chatResponse = await CallAsync(() => _huggingFaceApi.ChatAsync(chatRequest));
         var choice = chatResponse.Choices?.FirstOrDefault()
             ?? throw new InvalidOperationException("Provider returned no choices.");
 
         return choice.ToMessageDto();
     }
+
+    /// <summary>Turns a failed HuggingFace call (Refit throws for the typed ones) into a <see cref="ProviderException"/>.</summary>
+    private static async Task<T> CallAsync<T>(Func<Task<T>> call)
+    {
+        try
+        {
+            return await call();
+        }
+        catch (Refit.ApiException exception)
+        {
+            throw new ProviderException(
+                $"HuggingFace answered {(int)exception.StatusCode}: {Truncate(exception.Content)}", (int)exception.StatusCode, exception);
+        }
+        catch (HttpRequestException exception)
+        {
+            throw new ProviderException($"HuggingFace could not be reached: {exception.Message}", innerException: exception);
+        }
+    }
+
+    private static async Task EnsureSuccessAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        var body = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        throw new ProviderException($"HuggingFace answered {(int)response.StatusCode}: {Truncate(body)}", (int)response.StatusCode);
+    }
+
+    private static string Truncate(string? text, int maxLength = 500)
+        => string.IsNullOrEmpty(text) ? "(no content)" : text.Length <= maxLength ? text : text[..maxLength] + "...";
 }

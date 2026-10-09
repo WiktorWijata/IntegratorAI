@@ -1,3 +1,4 @@
+using IntegratorAI.BuildingBlocks.Application;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RescuePC.Software.Domain.Exceptions;
@@ -15,10 +16,14 @@ public class GlobalExceptionHandler : IExceptionHandler
 
     public async ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken cancellationToken)
     {
-        var (statusCode, title) = exception switch
+        var (statusCode, title, detail) = exception switch
         {
-            NotFoundException => (StatusCodes.Status404NotFound, "Not Found"),
-            _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
+            NotFoundException => (StatusCodes.Status404NotFound, "Not Found", exception.Message),
+
+            // The message of a provider failure can describe the state of our account at the provider, so it only goes to the log.
+            ProviderException => (StatusCodes.Status502BadGateway, "Bad Gateway", "The AI provider could not answer. Try again later."),
+
+            _ => (StatusCodes.Status500InternalServerError, "Internal Server Error", exception.Message)
         };
 
         _logger.LogError(exception, "Unhandled exception: {Title} - {Message}", title, exception.Message);
@@ -27,7 +32,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             Status = statusCode,
             Title = title,
-            Detail = exception.Message
+            Detail = detail
         };
 
         context.Response.StatusCode = statusCode;
