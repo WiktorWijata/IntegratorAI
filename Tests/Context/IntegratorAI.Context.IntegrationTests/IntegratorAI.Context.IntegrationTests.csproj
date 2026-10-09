@@ -33,6 +33,7 @@
         <ProjectReference Include="..\..\..\Source\Context\IntegratorAI.Context.Application\IntegratorAI.Context.Application.csproj" />
         <ProjectReference Include="..\..\..\Source\Context\IntegratorAI.Context.Domain\IntegratorAI.Context.Domain.csproj" />
         <ProjectReference Include="..\..\..\Source\Context\IntegratorAI.Context.Persistence\IntegratorAI.Context.Persistence.csproj" />
+        <ProjectReference Include="..\..\..\Source\Context\IntegratorAI.Context.Infrastructure\IntegratorAI.Context.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

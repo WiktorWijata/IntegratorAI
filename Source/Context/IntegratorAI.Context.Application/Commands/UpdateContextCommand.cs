@@ -3,7 +3,7 @@ using MediatR;
 
 namespace IntegratorAI.Context.Application.Commands
 {
-    public class UpdateContextCommand : IRequest
+    public class UpdateContextCommand : IRequest<Unit>
     {
         public UpdateContextCommand(
             Guid contextId,

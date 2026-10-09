@@ -6,7 +6,7 @@ using RescuePC.Software.Domain.Exceptions;
 
 namespace IntegratorAI.Context.Application.CommandHandlers;
 
-public class UpdateContextCommandHandler : IRequestHandler<UpdateContextCommand>
+public class UpdateContextCommandHandler : IRequestHandler<UpdateContextCommand, Unit>
 {
     private readonly IContextRepository _contextRepository;
     private readonly ICacheProvider _cacheProvider;
@@ -17,7 +17,7 @@ public class UpdateContextCommandHandler : IRequestHandler<UpdateContextCommand>
         _cacheProvider = cacheProvider;
     }
 
-    public async Task Handle(UpdateContextCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateContextCommand request, CancellationToken cancellationToken)
     {
         var context = await _contextRepository.GetByIdAsync(request.ContextId, cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.Context), request.ContextId);
@@ -35,5 +35,7 @@ public class UpdateContextCommandHandler : IRequestHandler<UpdateContextCommand>
         // The prompt is cached without expiration. The unit of work saves after this handler returns,
         // so a concurrent read between the removal and the save could re-cache the previous prompt.
         await _cacheProvider.RemoveAsync(CacheKeys.ContextPrompt(request.ContextId));
+
+        return Unit.Value;
     }
 }
