@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <!-- NuGet -->
     <PackageId>IntegratorAI.Api.Contracts</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Authors>WiktorWijata</Authors>
     <Description>Contract models, DTOs and Refit client interfaces for the IntegratorAI API.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -16,9 +16,16 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- Refit 15 no longer targets netstandard2.0, and its generator registers the client stubs of an assembly only
+       on .NET 5+. So netstandard2.0 stays on Refit 8 and net10.0 is built against Refit 15, the generation used by
+       RescuePC.Software.Refit. A consumer on Refit 15 also needs the Refit.Reflection package for AddRefitClient. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Refit" Version="8.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Refit" Version="15.1.0" />
   </ItemGroup>
 
 </Project>
