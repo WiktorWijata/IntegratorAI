@@ -52,7 +52,7 @@ public class OpenRouterProviderTests
         var message = await _provider.CompletionAsync(Completion());
 
         Assert.Equal("hello", message.Content);
-        await _api.Received(1).ChatAsync(Arg.Is<MessageRequest>(r => r.Model == "primary-model" && !r.Stream));
+        await _api.Received(1).ChatAsync(Arg.Is<MessageRequest>(r => r!.Model == "primary-model" && !r.Stream));
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class OpenRouterProviderTests
         var tokens = await ReadAllAsync(_provider.StreamCompletionAsync(Completion()));
 
         Assert.Equal(["Hel", "lo"], tokens);
-        await _api.Received(1).StreamChatAsync(Arg.Is<MessageRequest>(r => r.Model == "primary-model" && r.Stream));
+        await _api.Received(1).StreamChatAsync(Arg.Is<MessageRequest>(r => r!.Model == "primary-model" && r.Stream));
     }
 
     [Fact]
@@ -148,7 +148,7 @@ public class OpenRouterProviderTests
         var message = await _provider.SummaryCompletionAsync(Completion());
 
         Assert.Equal("short", message.Content);
-        await _api.Received(1).ChatAsync(Arg.Is<MessageRequest>(r => r.Model == "primary-model" && r.Messages.Length == 2));
+        await _api.Received(1).ChatAsync(Arg.Is<MessageRequest>(r => r!.Model == "primary-model" && r.Messages.Length == 2));
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class OpenRouterProviderTests
 
         await _provider.SummaryCompletionAsync(Completion());
 
-        await _api.Received(1).ChatAsync(Arg.Is<MessageRequest>(r => r.Model == "cheap-model"));
+        await _api.Received(1).ChatAsync(Arg.Is<MessageRequest>(r => r!.Model == "cheap-model"));
     }
 
     [Fact]

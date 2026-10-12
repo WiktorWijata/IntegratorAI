@@ -12,10 +12,10 @@ namespace IntegratorAI.Providers.Infrastructure.OpenRouter;
 
 public class OpenRouterProvider : IProvider, IProviderInitalizable
 {
-    public string PrimaryModel { get; set; }
+    public string PrimaryModel { get; set; } = string.Empty;
 
     /// <summary>The model that writes the summaries; the primary model when it is not set.</summary>
-    public string SummarizationModel { get; set; }
+    public string SummarizationModel { get; set; } = string.Empty;
 
     private readonly IOpenRouterApi _openRouterApi;
 
@@ -46,10 +46,8 @@ public class OpenRouterProvider : IProvider, IProviderInitalizable
         using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         using var reader = new StreamReader(stream);
 
-        while (!reader.EndOfStream && !cancellationToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested && await reader.ReadLineAsync(cancellationToken) is { } line)
         {
-            var line = await reader.ReadLineAsync(cancellationToken);
-
             // Lines that are not data are skipped: OpenRouter sends comments (": OPENROUTER PROCESSING") to keep the connection open.
             if (string.IsNullOrWhiteSpace(line) || !line.StartsWith("data: "))
                 continue;
