@@ -40,7 +40,7 @@ Tests/
 
 ### Choosing the provider
 
-The provider that answers is the one row of `providers.Provider` with `IsActive = 1` (`Type` is `HuggingFace` or `OpenRouter`, `PrimaryModel` is the model id, `SummarizationModel` is optional; OpenRouter uses the primary model when it is empty). The row is cached in Redis under `providers:active`, so after changing it delete that key (or wait for it to expire). A provider is available when it is listed under `Providers` in the settings (with its `BaseUrl`) and its API key is in the environment.
+The provider that answers is the one row of `providers.Provider` with `IsActive = 1` (`Type` is `HuggingFace` or `OpenRouter`, `PrimaryModel` is the model id, `SummarizationModel` is optional; OpenRouter uses the primary model when it is empty). The row is cached in Redis under `providers:active`, so after changing it delete that key (or wait for it to expire). A provider is available when it is listed under `Providers` in the settings (with its `BaseUrl`) and its API key is in the environment. Script `0002.ActivateOpenRouter.sql` makes OpenRouter the active provider (`google/gemma-4-31b-it:free`); to switch later, add a script that changes the row.
 
 ### Configuration
 
