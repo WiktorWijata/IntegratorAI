@@ -4,6 +4,8 @@ using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Domain;
 using IntegratorAI.Providers.Infrastructure.HuggingFace;
 using IntegratorAI.Providers.Infrastructure.HuggingFace.Api;
+using IntegratorAI.Providers.Infrastructure.OpenRouter;
+using IntegratorAI.Providers.Infrastructure.OpenRouter.Api;
 using IntegratorAI.Providers.Persistence;
 using RescuePC.Software.Refit;
 
@@ -26,7 +28,21 @@ public static class ServiceCollectionExtensions
                 });
         }
 
+        var openRouterConfig = providersConfiguration.SingleOrDefault(p => p.Type == ProviderType.OpenRouter);
+        if (openRouterConfig != null)
+        {
+            services.AddRefitClient<IOpenRouterApi>(
+                clientName: ProviderType.OpenRouter.ToString(),
+                client: c =>
+                {
+                    c.BaseAddress = new Uri(openRouterConfig.BaseUrl);
+                    c.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("OPENROUTER_API_KEY"));
+                });
+        }
+
         services.AddKeyedScoped<IProvider, HuggingFaceProvider>(ProviderType.HuggingFace);
+        services.AddKeyedScoped<IProvider, OpenRouterProvider>(ProviderType.OpenRouter);
         services.AddScoped<IProviderModule, ProviderModule>();
         services.AddEntityFramework(connectionString);
 

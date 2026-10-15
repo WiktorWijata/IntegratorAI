@@ -1,6 +1,6 @@
 # IntegratorAI
 
-An AI integration platform built with **.NET 10** that exposes a clean REST API for chat completions and configurable AI contexts. It currently supports **HuggingFace** as an LLM provider and is designed to be easily extended with additional providers.
+An AI integration platform built with **.NET 10** that exposes a clean REST API for chat completions and configurable AI contexts. It currently supports **HuggingFace** and **OpenRouter** as LLM providers and is designed to be easily extended with additional providers.
 
 ## Features
 
@@ -36,7 +36,11 @@ Tests/
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - A running **Redis** instance
 - A **SQL Server** (or compatible) database
-- A **HuggingFace API token**
+- A **HuggingFace API token** (`HF_API_KEY`) or an **OpenRouter API key** (`OPENROUTER_API_KEY`)
+
+### Choosing the provider
+
+The provider that answers is the one row of `providers.Provider` with `IsActive = 1` (`Type` is `HuggingFace` or `OpenRouter`, `PrimaryModel` is the model id, `SummarizationModel` is optional; OpenRouter uses the primary model when it is empty). The row is cached in Redis under `providers:active`, so after changing it delete that key (or wait for it to expire). A provider is available when it is listed under `Providers` in the settings (with its `BaseUrl`) and its API key is in the environment.
 
 ### Configuration
 

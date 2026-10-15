@@ -1017,5 +1017,6 @@ GO
 SET IDENTITY_INSERT [providers].[Provider] ON 
 
 INSERT [providers].[Provider] ([Id], [Type], [PrimaryModel], [IsActive], [SummarizationModel]) VALUES (1, N'HuggingFace', N'meta-llama/Llama-3.1-8B-Instruct:novita', 1, N'philschmid/bart-large-cnn-samsum')
+INSERT [providers].[Provider] ([Id], [Type], [PrimaryModel], [IsActive], [SummarizationModel]) VALUES (2, N'OpenRouter', N'meta-llama/llama-3.3-70b-instruct:free', 0, NULL)
 SET IDENTITY_INSERT [providers].[Provider] OFF
 GO
