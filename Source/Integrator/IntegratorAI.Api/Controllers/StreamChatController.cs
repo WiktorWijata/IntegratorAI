@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using IntegratorAI.Api.Contracts.Chat;
 using IntegratorAI.Api.Results;
 using IntegratorAI.Chat.Contracts;
+using IntegratorAI.Chat.Contracts.Models;
 
 namespace IntegratorAI.Api.Controllers;
 
@@ -48,5 +49,22 @@ public class StreamChatController : ControllerBase
     public IActionResult Continue(Guid id, [FromBody] CompletionRequest completion, CancellationToken cancellationToken)
     {
         return new SseResult(_chatModule.StreamContinueCompletion(id, completion.Prompt, cancellationToken));
+    }
+
+    /// <summary>
+    /// Answers the tools the model asked for (the <c>tool_call</c> events of the previous stream) and streams on: the
+    /// answer written from the results, or further tool calls.
+    /// </summary>
+    /// <param name="id">Unique identifier of the completion that is waiting for tool results.</param>
+    /// <param name="request">One result for every tool call of the last answer.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    [HttpPost("completions/{id:guid}/tool-results")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public IActionResult SubmitToolResults(Guid id, [FromBody] ToolResultsRequest request, CancellationToken cancellationToken)
+    {
+        var results = request.Results.Select(r => new ToolResultDto { ToolCallId = r.ToolCallId, Content = r.Content, IsError = r.IsError });
+
+        return new SseResult(_chatModule.StreamToolResults(id, results, cancellationToken));
     }
 }

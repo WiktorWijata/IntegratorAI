@@ -32,7 +32,7 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
         return choice.ToMessageDto();
     }
 
-    public async IAsyncEnumerable<string> StreamCompletionAsync(ProviderCompletionDto completion, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<ProviderStreamEvent> StreamCompletionAsync(ProviderCompletionDto completion, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var request = completion.ToRequest(PrimaryModel, stream: true);
 
@@ -65,7 +65,7 @@ public class HuggingFaceProvider : IProvider, IProviderInitalizable
 
             if (token is not null)
             {
-                yield return token;
+                yield return ProviderStreamEvent.ForToken(token);
             }
         }
     }

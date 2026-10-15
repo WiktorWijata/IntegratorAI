@@ -31,7 +31,7 @@ public static class ContextMapping
     {
         public ToolParameterDto ToDto()
         {
-            return new ToolParameterDto(parameter.Name, parameter.Type, parameter.Description);
+            return new ToolParameterDto(parameter.Name, parameter.Type, parameter.Description, parameter.Required);
         }
     }
 

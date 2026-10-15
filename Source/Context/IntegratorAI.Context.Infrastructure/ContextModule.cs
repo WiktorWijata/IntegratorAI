@@ -23,4 +23,7 @@ public class ContextModule : IContextModule
 
     public Task<string> GetContextPrompt(Guid contextId, CancellationToken cancellationToken = default)
         => _mediator.Send(new GetContextPromptQuery(contextId), cancellationToken);
+
+    public Task<IReadOnlyList<ToolDto>> GetContextTools(Guid contextId, CancellationToken cancellationToken = default)
+        => _mediator.Send(new GetContextToolsQuery(contextId), cancellationToken);
 }

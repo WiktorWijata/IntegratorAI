@@ -33,12 +33,12 @@ public class ProviderModule : IProviderModule
         return await provider.SummaryCompletionAsync(completion);
     }
 
-    public async IAsyncEnumerable<string> StreamCompletionAsync(ProviderCompletionDto completion, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<ProviderStreamEvent> StreamCompletionAsync(ProviderCompletionDto completion, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var provider = await GetActiveProviderAsync(cancellationToken);
-        await foreach (var token in provider.StreamCompletionAsync(completion, cancellationToken))
+        await foreach (var item in provider.StreamCompletionAsync(completion, cancellationToken))
         {
-            yield return token;
+            yield return item;
         }
     }
 

@@ -25,5 +25,14 @@ namespace IntegratorAI.Api.Contracts.Chat
         /// </summary>
         [Post("/streamchat/completions/{id}")]
         Task<HttpResponseMessage> ContinueCompletion(Guid id, [Body] CompletionRequest request, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Answers the tools the model asked for. A stream may end with <c>tool_call</c> events (<c>event: tool_call</c>,
+        /// data <c>{"id": "...", "name": "...", "arguments": {...}}</c>) instead of an answer; the completion then waits
+        /// until every call is answered here, and the response is a stream again: the answer, or more tool calls.
+        /// Answers 409 when the completion is not waiting for tools or the results do not match the calls.
+        /// </summary>
+        [Post("/streamchat/completions/{id}/tool-results")]
+        Task<HttpResponseMessage> SubmitToolResults(Guid id, [Body] ToolResultsRequest request, CancellationToken cancellationToken = default);
     }
 }

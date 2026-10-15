@@ -13,7 +13,8 @@ internal static class ContextEntityFactory
             {
                 Name = p.Name,
                 Type = p.Type,
-                Description = p.Description
+                Description = p.Description,
+                Required = p.Required
             }).ToList(),
             guardrails: t.Guardrails?.Select(g => new Guardrail(
                 description: g.Description,

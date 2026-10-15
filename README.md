@@ -42,6 +42,16 @@ Tests/
 
 The provider that answers is the one row of `providers.Provider` with `IsActive = 1` (`Type` is `HuggingFace` or `OpenRouter`, `PrimaryModel` is the model id, `SummarizationModel` is optional; OpenRouter uses the primary model when it is empty). The row is cached in Redis under `providers:active`, so after changing it delete that key (or wait for it to expire). A provider is available when it is listed under `Providers` in the settings (with its `BaseUrl`) and its API key is in the environment. Script `0002.ActivateOpenRouter.sql` makes OpenRouter the active provider (`google/gemma-4-31b-it:free`); to switch later, add a script that changes the row.
 
+### Tool calling
+
+A context can declare tools (name, description, parameters; a parameter can be `required`). On the streaming API the model may then ask for a tool instead of answering:
+
+1. The stream carries `event: tool_call` with `data: {"id": "call_1", "name": "get_project", "arguments": {"id": 5}}` (one event per call) and ends with `data: [DONE]`. The completion now waits for the results.
+2. The client runs the tools and sends the results to `POST /streamchat/completions/{id}/tool-results` with `{"results": [{"toolCallId": "call_1", "content": "...", "isError": false}]}`. Every call must be answered, exactly once.
+3. The response is a stream again: the answer written from the results, or further `tool_call` events.
+
+A completion that waits for results answers 409 to a new prompt, and 409 to results that do not match its calls. Providers decide how the tools reach the model: OpenRouter sends them as native `tools` (and `tool_choice: auto`); HuggingFace ignores them for now. Only the tools of the context are offered, so a client that handles the data itself can leave a tool out of the context.
+
 ### Configuration
 
 Copy and adjust `appsettings.json` in `Source/Integrator/IntegratorAI.Api`:

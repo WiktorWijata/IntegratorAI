@@ -20,6 +20,8 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             NotFoundException => (StatusCodes.Status404NotFound, "Not Found", exception.Message),
 
+            ConflictException => (StatusCodes.Status409Conflict, "Conflict", exception.Message),
+
             // The message of a provider failure can describe the state of our account at the provider, so it only goes to the log.
             ProviderException => (StatusCodes.Status502BadGateway, "Bad Gateway", "The AI provider could not answer. Try again later."),
 
