@@ -24,5 +24,10 @@ namespace IntegratorAI.Api.Contracts.Context.Models
         /// </summary>
         [Required]
         public string Description { get; set; }
+
+        /// <summary>
+        /// Whether the model must supply the parameter. Defaults to <c>false</c>.
+        /// </summary>
+        public bool Required { get; set; }
     }
 }

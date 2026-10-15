@@ -1,12 +1,10 @@
 using System.Runtime.CompilerServices;
-using System.Text;
 using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Contracts.Models;
 using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Repositories;
 using IntegratorAI.Context.Contracts;
 using IntegratorAI.Providers.Contracts;
-using IntegratorAI.Providers.Contracts.Models;
 using MediatR;
 
 namespace IntegratorAI.Chat.Application.CommandHandlers;
@@ -38,33 +36,23 @@ public class StreamCreateCompletionCommandHandler : IStreamRequestHandler<Stream
 
         var completion = new Completion(
             message: new Message(MessageRole.User, request.Prompt),
-            systemMessage: systemMessage
+            systemMessage: systemMessage,
+            contextId: request.ContextId
         );
 
         await _completionRepository.AddAsync(completion, cancellationToken);
 
         yield return CompletionStreamEvent.ForCompletion(completion.Id);
 
-        var completionDto = new ProviderCompletionDto
-        {
-            Messages = completion.ContextMessages.Select(m => new ProviderMessageDto
-            {
-                Role = m.Role.ToString(),
-                Content = m.Content
-            }).ToArray()
-        };
+        var tools = request.ContextId.HasValue
+            ? await _contextModule.GetContextTools(request.ContextId.Value, cancellationToken)
+            : null;
 
-        var fullResponse = new StringBuilder();
+        var providerRequest = completion.ToProviderCompletion(tools);
 
-        await foreach (var token in _providerModule.StreamCompletionAsync(completionDto, cancellationToken))
+        await foreach (var item in _providerModule.StreamAnswer(completion, providerRequest, cancellationToken))
         {
-            fullResponse.Append(token);
-            yield return CompletionStreamEvent.ForToken(token);
+            yield return item;
         }
-
-        completion.AddMessage(new Message(
-            role: MessageRole.Assistant,
-            content: fullResponse.ToString()
-        ));
     }
 }

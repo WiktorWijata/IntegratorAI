@@ -29,12 +29,12 @@ public class HuggingFaceProviderErrorTests
     private static HttpResponseMessage Response(HttpStatusCode status, string body, string contentType = "application/json")
         => new(status) { Content = new StringContent(body, Encoding.UTF8, contentType) };
 
-    private static async Task<List<string>> ReadAllAsync(IAsyncEnumerable<string> tokens)
+    private static async Task<List<string>> ReadAllAsync(IAsyncEnumerable<ProviderStreamEvent> tokens)
     {
         var all = new List<string>();
         await foreach (var token in tokens)
         {
-            all.Add(token);
+            all.Add(token.Token!);
         }
 
         return all;

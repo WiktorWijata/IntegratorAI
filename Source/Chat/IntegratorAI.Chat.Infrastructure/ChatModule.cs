@@ -24,8 +24,11 @@ public class ChatModule : IChatModule
     public IAsyncEnumerable<CompletionStreamEvent> StreamCreateCompletion(string prompt, Guid? contextId, CancellationToken cancellationToken = default)
         => _mediator.CreateStream(new StreamCreateCompletionCommand(prompt, contextId), cancellationToken);
 
-    public IAsyncEnumerable<string> StreamContinueCompletion(Guid completionId, string prompt, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<CompletionStreamEvent> StreamContinueCompletion(Guid completionId, string prompt, CancellationToken cancellationToken = default)
         => _mediator.CreateStream(new StreamContinueCompletionCommand(completionId, prompt), cancellationToken);
+
+    public IAsyncEnumerable<CompletionStreamEvent> StreamToolResults(Guid completionId, IEnumerable<ToolResultDto> results, CancellationToken cancellationToken = default)
+        => _mediator.CreateStream(new StreamToolResultsCommand(completionId, results.ToList()), cancellationToken);
 
     public Task<CompletionDto> GetCompletion(Guid completionId, CancellationToken cancellationToken = default)
         => _mediator.Send(new GetCompletionQuery(completionId), cancellationToken);

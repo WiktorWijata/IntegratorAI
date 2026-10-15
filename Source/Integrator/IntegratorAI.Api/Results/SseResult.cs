@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using IntegratorAI.Chat.Contracts.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,12 +38,38 @@ public class SseResult : IActionResult
                 continue;
             }
 
-            await response.WriteAsync(Frame(item.Data), cancellationToken);
+            var frame = item.Type == CompletionStreamEventType.ToolCall ? ToolCallFrame(item.ToolCall) : Frame(item.Data);
+            await response.WriteAsync(frame, cancellationToken);
             await response.Body.FlushAsync(cancellationToken);
         }
 
         await response.WriteAsync("data: [DONE]\n\n", cancellationToken);
         await response.Body.FlushAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// A request of the model to run a tool, as the event <c>tool_call</c>. The arguments are written as a JSON object.
+    /// </summary>
+    public static string ToolCallFrame(ToolCallDto toolCall)
+    {
+        JsonNode? arguments = null;
+        try
+        {
+            arguments = JsonNode.Parse(string.IsNullOrWhiteSpace(toolCall.Arguments) ? "{}" : toolCall.Arguments);
+        }
+        catch (JsonException)
+        {
+            // The model wrote arguments that are not JSON; the client will find that they do not fit the tool.
+        }
+
+        var json = new JsonObject
+        {
+            ["id"] = toolCall.Id,
+            ["name"] = toolCall.Name,
+            ["arguments"] = arguments ?? new JsonObject(),
+        }.ToJsonString();
+
+        return $"event: tool_call\ndata: {json}\n\n";
     }
 
     /// <summary>

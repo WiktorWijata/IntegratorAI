@@ -5,6 +5,7 @@ CREATE TABLE [context].[ToolParameter]
 	[Name]          NVARCHAR(255)   NOT NULL,
 	[Type]          NVARCHAR(50)    NOT NULL,
 	[Description]   NVARCHAR(MAX)   NOT NULL,
+	[Required]      BIT             NOT NULL DEFAULT 0,
 	CONSTRAINT [FK_ToolParameter_Tool] FOREIGN KEY ([ToolId]) REFERENCES [context].[Tool] ([Id]) ON DELETE CASCADE
 )
 

@@ -44,10 +44,10 @@ public class StreamCreateCompletionCommandHandlerTests : IDisposable
         _context.Dispose();
     }
 
-    private static async IAsyncEnumerable<string> StreamTokens(params string[] tokens)
+    private static async IAsyncEnumerable<ProviderStreamEvent> StreamTokens(params string[] tokens)
     {
         foreach (var token in tokens)
-            yield return token;
+            yield return ProviderStreamEvent.ForToken(token);
     }
 
     [Fact]
