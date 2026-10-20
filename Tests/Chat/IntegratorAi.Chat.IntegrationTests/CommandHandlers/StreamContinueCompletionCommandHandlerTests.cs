@@ -5,6 +5,7 @@ using IntegratorAI.Chat.Domain;
 using IntegratorAI.Chat.Domain.Events;
 using IntegratorAI.Chat.Persistence;
 using IntegratorAI.Chat.Persistence.Repositories;
+using IntegratorAI.Context.Contracts;
 using IntegratorAI.Providers.Contracts;
 using IntegratorAI.Providers.Contracts.Models;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,7 @@ public class StreamContinueCompletionCommandHandlerTests : IDisposable
 
         _handler = new StreamContinueCompletionCommandHandler(
             _providerModule,
+            Substitute.For<IContextModule>(),
             _repository,
             new ChatSettings { SummarizationThreshold = 10 });
     }
@@ -58,10 +60,10 @@ public class StreamContinueCompletionCommandHandlerTests : IDisposable
         return completion;
     }
 
-    private static async IAsyncEnumerable<string> StreamTokens(params string[] tokens)
+    private static async IAsyncEnumerable<ProviderStreamEvent> StreamTokens(params string[] tokens)
     {
         foreach (var token in tokens)
-            yield return token;
+            yield return ProviderStreamEvent.ForToken(token);
     }
 
     [Fact]
@@ -85,7 +87,7 @@ public class StreamContinueCompletionCommandHandlerTests : IDisposable
 
         var tokens = new List<string>();
         await foreach (var token in _handler.Handle(new StreamContinueCompletionCommand(completion.Id, "follow up"), CancellationToken.None))
-            tokens.Add(token);
+            tokens.Add(token.Data);
 
         Assert.Equal(["tok1", "tok2"], tokens);
     }
@@ -114,6 +116,7 @@ public class StreamContinueCompletionCommandHandlerTests : IDisposable
     {
         var handler = new StreamContinueCompletionCommandHandler(
             _providerModule,
+            Substitute.For<IContextModule>(),
             _repository,
             new ChatSettings { SummarizationThreshold = 2 });
 

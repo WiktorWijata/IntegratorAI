@@ -5,6 +5,8 @@ CREATE TABLE [chat].[Message]
 	[Index]         INT                 NOT NULL,
 	[Role]          NVARCHAR(50)        NOT NULL,
 	[Content]       NVARCHAR(MAX)       NOT NULL,
+	[ToolCallsJson] NVARCHAR(MAX)       NULL,
+	[ToolCallId]    NVARCHAR(200)       NULL,
 	[CreatedAt]     DATETIME2           NOT NULL DEFAULT GETUTCDATE(),
 	CONSTRAINT [FK_Message_Completion] FOREIGN KEY ([CompletionId]) REFERENCES [chat].[Completion] ([Id])
 )

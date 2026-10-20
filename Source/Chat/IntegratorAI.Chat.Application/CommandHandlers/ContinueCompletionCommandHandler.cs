@@ -1,3 +1,4 @@
+using IntegratorAI.BuildingBlocks.Application;
 using IntegratorAI.Chat.Application.Commands;
 using IntegratorAI.Chat.Contracts.Models;
 using IntegratorAI.Chat.Domain;
@@ -26,6 +27,11 @@ public class ContinueCompletionCommandHandler : IRequestHandler<ContinueCompleti
     {
         var completion = await _completionRepository.GetByIdAsync(request.CompletionId, cancellationToken)
             ?? throw new NotFoundException(nameof(Completion), request.CompletionId);
+
+        if (completion.PendingToolCalls.Count > 0)
+        {
+            throw new ConflictException("The completion is waiting for tool results.");
+        }
 
         completion.AddMessage(new Message(MessageRole.User, request.Prompt));
 

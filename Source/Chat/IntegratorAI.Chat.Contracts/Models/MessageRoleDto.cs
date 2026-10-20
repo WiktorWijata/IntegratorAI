@@ -4,6 +4,7 @@
     {
         User = 1,
         Assistant,
-        System
+        System,
+        Tool
     }
 }

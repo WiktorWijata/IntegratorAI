@@ -36,7 +36,8 @@ public class CreateCompletionCommandHandler : IRequestHandler<CreateCompletionCo
 
         var completion = new Completion(
             message: new Message(MessageRole.User, request.Prompt),
-            systemMessage: systemMessage
+            systemMessage: systemMessage,
+            contextId: request.ContextId
         );
 
         await _completionRepository.AddAsync(completion, cancellationToken);

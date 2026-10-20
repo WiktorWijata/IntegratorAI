@@ -10,6 +10,7 @@ public class CompletionConfiguration : IEntityTypeConfiguration<Completion>
     {
         builder.Ignore(c => c.UnsummarizedMessages);
         builder.Ignore(c => c.ContextMessages);
+        builder.Ignore(c => c.PendingToolCalls);
 
         builder.HasMany(c => c.Messages)
                .WithOne()
