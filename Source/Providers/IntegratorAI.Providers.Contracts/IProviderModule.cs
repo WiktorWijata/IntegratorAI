@@ -9,6 +9,6 @@ namespace IntegratorAI.Providers.Contracts
     {
         Task<ProviderMessageDto> CompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default);
         Task<ProviderMessageDto> SummaryCompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default);
-        IAsyncEnumerable<string> StreamCompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<ProviderStreamEvent> StreamCompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default);
     }
 }

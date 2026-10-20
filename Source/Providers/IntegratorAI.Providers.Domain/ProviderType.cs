@@ -2,5 +2,6 @@
 
 public enum ProviderType
 {
-    HuggingFace = 1
+    HuggingFace = 1,
+    OpenRouter = 2
 }

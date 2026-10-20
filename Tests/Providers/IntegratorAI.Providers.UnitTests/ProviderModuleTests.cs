@@ -299,7 +299,7 @@ public class ProviderModuleTests
         public Task<ProviderMessageDto> SummaryCompletionAsync(ProviderCompletionDto completion)
             => Task.FromResult(SummaryResult ?? new ProviderMessageDto());
 
-        public IAsyncEnumerable<string> StreamCompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default)
-            => AsyncEnumerable.Empty<string>();
+        public IAsyncEnumerable<ProviderStreamEvent> StreamCompletionAsync(ProviderCompletionDto completion, CancellationToken cancellationToken = default)
+            => AsyncEnumerable.Empty<ProviderStreamEvent>();
     }
 }

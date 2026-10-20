@@ -1014,8 +1014,3 @@ INSERT [context].[Guardrail] ([Id], [ToolId], [Description], [RequiresConfirmati
 INSERT [context].[Guardrail] ([Id], [ToolId], [Description], [RequiresConfirmation]) VALUES (4, 5, N'Retrieving reservation details does not require confirmation.', 1)
 SET IDENTITY_INSERT [context].[Guardrail] OFF
 GO
-SET IDENTITY_INSERT [providers].[Provider] ON 
-
-INSERT [providers].[Provider] ([Id], [Type], [PrimaryModel], [IsActive], [SummarizationModel]) VALUES (1, N'HuggingFace', N'meta-llama/Llama-3.1-8B-Instruct:novita', 1, N'philschmid/bart-large-cnn-samsum')
-SET IDENTITY_INSERT [providers].[Provider] OFF
-GO
